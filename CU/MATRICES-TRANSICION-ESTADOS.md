@@ -28,7 +28,7 @@ Define el estado del lote/bulto/traza según su cantidad disponible.
 | CU | Operación | Estado Inicial | Estado Final |
 |----|-----------|----------------|--------------|
 | CU1 | Alta Ingreso Compra | - | NUEVO |
-| CU3 | Muestreo | NUEVO/DISPONIBLE | EN_USO |
+| CU3 | Muestreo | NUEVO | EN_USO |
 | CU4 | Devolución Compra | NUEVO/EN_USO | DEVUELTO |
 | CU7 | Consumo Producción | NUEVO/EN_USO | EN_USO/CONSUMIDO |
 | CU20 | Ingreso Producción | - | NUEVO |
