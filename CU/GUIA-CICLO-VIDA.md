@@ -170,6 +170,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 |-----------|--------------|
 | Tomar muestra | CU3 Muestreo |
 | Error en asignacion | CU26 Reverso |
+| Devolver al proveedor | CU4 Devolucion |
 
 ---
 
@@ -196,6 +197,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Resultado aprobado | CU5 Aprobado |
 | Resultado rechazado | CU6 Rechazado |
 | Error en muestreo | CU26 Reverso |
+| Devolver al proveedor | CU4 Devolucion |
 
 ---
 
@@ -247,6 +249,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 **Para Materias Primas (API/EXC):**
 | Situacion | CU Aplicable |
 |-----------|--------------|
+| Devolver al proveedor | CU4 Devolucion |
 | Usar en produccion | CU7 Consumo |
 | Requiere reanalisis futuro | CU8 Reanalisis |
 | Ajuste de cantidad | CU25 Ajuste |
@@ -283,6 +286,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Devolver al proveedor | CU4 Devolucion |
 | Ajuste/descarte | CU25 Ajuste |
 | Error en dictamen | CU26 Reverso |
+| Devolver al proveedor | CU4 Devolucion |
 
 ---
 
@@ -307,6 +311,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Situacion | CU Aplicable |
 |-----------|--------------|
 | Error en consumo | CU26 Reverso |
+| Devolver al proveedor | CU4 Devolucion | 
 
 > **Nota:** CU7 es una operacion de BAJA. Si se consume la totalidad, el lote queda CONSUMIDO (terminal).
 
