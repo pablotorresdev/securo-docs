@@ -12,45 +12,23 @@ Define el estado del lote/bulto/traza según su cantidad disponible.
 
 ### Valores
 
-| Estado | Descripción | Prioridad | Condición |
-|--------|-------------|-----------|-----------|
-| `NUEVO` | Lote recién ingresado | 0 | Cantidad inicial = cantidad actual |
-| `DISPONIBLE` | Disponible para operaciones | 0 | Cantidad inicial = cantidad actual (trazas) |
-| `EN_USO` | Parcialmente consumido | 1 | Cantidad inicial > cantidad actual > 0 |
-| `CONSUMIDO` | Agotado por producción | 2 | Cantidad actual = 0 (por producción) |
-| `VENDIDO` | Agotado por venta | 2 | Cantidad actual = 0 (por venta) |
-| `DEVUELTO` | Agotado por devolución | 2 | Cantidad actual = 0 (por devolución compra) |
-| `RECALL` | Retirado del mercado | 2 | Cantidad actual = 0 (por retiro mercado) |
-| `DESCARTADO` | Destruido | 2 | Cantidad actual = 0 (por destrucción) |
-
-### Matriz de Transiciones Válidas
-
-```
-                    DESTINO
-           ┌────────────────────────────────────────────────────────────────┐
-           │ NUEVO │ DISP │ EN_USO │ CONSU │ VEND │ DEVUE │ RECALL │ DESCA │
-    ┌──────┼───────┼──────┼────────┼───────┼──────┼───────┼────────┼───────┤
- O  │NUEVO │   -   │  ✓   │   ✓    │   ✓   │  ✓   │   ✓   │   ✓    │   ✓   │
- R  │DISP  │   -   │  -   │   ✓    │   ✓   │  ✓   │   ✓   │   ✓    │   ✓   │
- I  │EN_USO│   ✓*  │  ✓*  │   -    │   ✓   │  ✓   │   ✓   │   ✓    │   ✓   │
- G  │CONSU │   ✓*  │  ✓*  │   ✓*   │   -   │  -   │   -   │   -    │   -   │
- E  │VEND  │   ✓*  │  ✓*  │   ✓*   │   -   │  -   │   -   │   -    │   -   │
- N  │DEVUE │   ✓*  │  ✓*  │   ✓*   │   -   │  -   │   -   │   -    │   -   │
-    │RECALL│   ✓*  │  ✓*  │   ✓*   │   -   │  -   │   -   │   -    │   -   │
-    │DESCA │   -   │  -   │   -    │   -   │  -   │   -   │   -    │   -   │
-    └──────┴───────┴──────┴────────┴───────┴──────┴───────┴────────┴───────┘
-
-    ✓  = Transición válida (operación normal)
-    ✓* = Transición válida solo por REVERSO (CU26)
-    -  = Transición no válida
-```
+| Estado | Descripción | Condición |
+|--------|-------------|-----------|
+| `NUEVO` | Lote recién ingresado | Cantidad inicial = cantidad actual |
+| `DISPONIBLE` | Unidad trazada disponible | Aplica a cada traza |
+| `EN_USO` | Parcialmente consumido | Cantidad inicial > cantidad actual > 0 |
+| `CONSUMIDO` | Agotado por producción | Cantidad actual = 0 (por producción) |
+| `VENDIDO` | Agotado por venta | Cantidad actual = 0 (por venta) |
+| `DEVUELTO` | Agotado por devolución | Cantidad actual = 0 (por devolución compra) |
+| `RECALL` | Retirado del mercado | Cantidad actual = 0 (por retiro mercado) |
+| `DESCARTADO` | Destruido | Cantidad actual = 0 (por destrucción) |
 
 ### Transiciones por Caso de Uso
 
 | CU | Operación | Estado Inicial | Estado Final |
 |----|-----------|----------------|--------------|
 | CU1 | Alta Ingreso Compra | - | NUEVO |
-| CU3 | Muestreo | NUEVO/DISPONIBLE | EN_USO |
+| CU3 | Muestreo | NUEVO | EN_USO |
 | CU4 | Devolución Compra | NUEVO/EN_USO | DEVUELTO |
 | CU7 | Consumo Producción | NUEVO/EN_USO | EN_USO/CONSUMIDO |
 | CU20 | Ingreso Producción | - | NUEVO |
@@ -71,41 +49,16 @@ Define el estado de aprobación del lote según análisis de calidad.
 | Dictamen | Descripción | Tipo |
 |----------|-------------|------|
 | `RECIBIDO` | Lote recién ingresado, pendiente análisis | Inicial |
-| `CUARENTENA` | En espera de análisis o decisión | Transitorio |
+| `CUARENTENA` | En espera de resultado de análisis | Transitorio |
 | `APROBADO` | Aprobado por control de calidad | Final positivo |
 | `RECHAZADO` | Rechazado por control de calidad | Final negativo |
 | `ANULADO` | Análisis anulado | Excepcional |
 | `CANCELADO` | Operación cancelada | Excepcional |
-| `ANALISIS_EXPIRADO` | Análisis venció sin resultado | Automático |
+| `ANALISIS_EXPIRADO` | La fecha de re-análisis venció | Automático |
 | `VENCIDO` | Lote vencido por fecha | Automático |
 | `LIBERADO` | Liberado para venta | Final comercial |
 | `DEVOLUCION_CLIENTES` | Devuelto por clientes | Comercial |
 | `RETIRO_MERCADO` | Retirado del mercado (recall) | Comercial |
-
-### Matriz de Transiciones Válidas
-
-```
-                           DESTINO
-         ┌─────────────────────────────────────────────────────────────────────────┐
-         │ RECIB │ CUARE │ APROB │ RECHA │ ANULA │ CANCE │ A_EXP │ VENCI │ LIBER │
-   ┌─────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┤
- O │RECIB│   -   │   ✓   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │
- R │CUARE│   -   │   -   │   ✓   │   ✓   │   -   │   -   │   ✓†  │   -   │   -   │
- I │APROB│   -   │   ✓‡  │   -   │   -   │   -   │   -   │   -   │   ✓†  │   ✓   │
- G │RECHA│   -   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │
- E │ANULA│   -   │   ✓*  │   ✓*  │   -   │   -   │   -   │   -   │   -   │   -   │
- N │CANCE│   -   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │
-   │A_EXP│   -   │   ✓*  │   -   │   -   │   -   │   -   │   -   │   -   │   -   │
-   │VENCI│   -   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │
-   │LIBER│   -   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │   -   │
-   └─────┴───────┴───────┴───────┴───────┴───────┴───────┴───────┴───────┴───────┘
-
-    ✓  = Transición válida (operación normal)
-    ✓* = Transición válida solo por REVERSO (CU26)
-    ✓† = Transición automática por sistema (CU9/CU10)
-    ✓‡ = Transición válida por REANALISIS (CU8)
-    -  = Transición no válida
-```
 
 ### Transiciones por Caso de Uso
 
@@ -114,10 +67,9 @@ Define el estado de aprobación del lote según análisis de calidad.
 | CU1 | Alta Ingreso Compra | - | RECIBIDO |
 | CU2 | Dictamen Cuarentena | RECIBIDO | CUARENTENA |
 | CU5/6 | Resultado Análisis | CUARENTENA | APROBADO/RECHAZADO |
-| CU8 | Reanálisis Lote | APROBADO | CUARENTENA |
-| CU9 | Análisis Expirado | CUARENTENA | ANALISIS_EXPIRADO |
-| CU10 | Vencimiento Lote | APROBADO | VENCIDO |
-| CU11 | Anulación Análisis | APROBADO/RECHAZADO | ANULADO |
+| CU8 | Reanálisis Lote | APROBADO | APROBADO(Analisis asignado) |
+| CU9 | Análisis Expirado | RECIBIDO/CUARENTENA/APROBADO | ANALISIS_EXPIRADO |
+| CU10 | Vencimiento Lote | APROBADO/LIBERADO | VENCIDO |
 | CU20 | Ingreso Producción | - | RECIBIDO |
 | CU21 | Confirmar Lote Liberado | APROBADO | LIBERADO |
 | CU23 | Devolución Venta | LIBERADO | DEVOLUCION_CLIENTES |
@@ -137,7 +89,7 @@ Define el estado de aprobación del lote según análisis de calidad.
 
 | Operación | Requiere Estado | Requiere Dictamen |
 |-----------|-----------------|-------------------|
-| Muestreo (CU3) | NUEVO | CUARENTENA |
+| Muestreo (CU3) | NUEVO/EN_USO | CUARENTENA |
 | Consumo (CU7) | NUEVO/EN_USO | APROBADO |
 | Venta (CU22) | NUEVO/EN_USO | LIBERADO |
 | Devolución Venta (CU23) | VENDIDO | LIBERADO |
@@ -165,82 +117,7 @@ El reverso de movimiento permite deshacer transiciones de estado:
 
 ---
 
-## 4. Diagrama de Flujo de Estados
-
-### EstadoEnum (Cantidad)
-
-```
-                    ┌──────────────────┐
-                    │     INGRESO      │
-                    │   (CU1, CU20)    │
-                    └────────┬─────────┘
-                             │
-                             v
-                    ┌────────────────┐
-                    │     NUEVO      │
-                    └───────┬────────┘
-                            │
-              ┌─────────────┼─────────────┐
-              │             │             │
-              v             v             v
-        ┌──────────┐  ┌──────────┐  ┌──────────┐
-        │ EN_USO   │  │ CONSUMIDO│  │ VENDIDO  │
-        │(Muestreo)│  │(Produc.) │  │ (Venta)  │
-        └─────┬────┘  └──────────┘  └────┬─────┘
-              │                          │
-              v                          v
-        ┌──────────┐              ┌──────────┐
-        │CONSUMIDO │              │ RECALL   │
-        │/VENDIDO  │              │(Retiro)  │
-        └──────────┘              └──────────┘
-```
-
-### DictamenEnum (Calidad)
-
-```
-                    ┌──────────────────┐
-                    │     INGRESO      │
-                    │   (CU1, CU20)    │
-                    └────────┬─────────┘
-                             │
-                             v
-                    ┌────────────────┐
-                    │    RECIBIDO    │
-                    └───────┬────────┘
-                            │ CU2
-                            v
-                    ┌────────────────┐
-           ┌───────>│   CUARENTENA   │<──────┐
-           │        └───────┬────────┘       │
-           │ CU8            │ CU5/6    CU9   │
-           │        ┌───────┴───────┐        │
-           │        v               v        │
-      ┌────┴─────┐           ┌──────────┐    │
-      │ APROBADO │           │RECHAZADO │    │
-      └────┬─────┘           └──────────┘    │
-           │                                 │
-     ┌─────┴─────┐                           │
-     │ CU21      │ CU10                      │
-     v           v                           │
-┌─────────┐  ┌─────────┐                     │
-│LIBERADO │  │ VENCIDO │                     │
-└────┬────┘  └─────────┘                     │
-     │                                       │
-  CU23/24                                    │
-     v                                       │
-┌────────────────┐                           │
-│DEVOLUCION/     │                           │
-│RETIRO_MERCADO  │                           │
-└────────────────┘                           │
-                                             │
-              ┌──────────────────┐           │
-              │ ANALISIS_EXPIRADO│───────────┘
-              └──────────────────┘  (reverso)
-```
-
----
-
-## 5. Referencias ANMAT
+## 4. Referencias ANMAT
 
 - **Disposición 4159**: Requisitos para sistemas computarizados
 - **Anexo 6**: Requisitos específicos de trazabilidad
