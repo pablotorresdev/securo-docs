@@ -12,38 +12,16 @@ Define el estado del lote/bulto/traza según su cantidad disponible.
 
 ### Valores
 
-| Estado | Descripción | Prioridad | Condición |
-|--------|-------------|-----------|-----------|
-| `NUEVO` | Lote recién ingresado | 0 | Cantidad inicial = cantidad actual |
-| `DISPONIBLE` | Disponible para operaciones | 0 | Cantidad inicial = cantidad actual (trazas) |
-| `EN_USO` | Parcialmente consumido | 1 | Cantidad inicial > cantidad actual > 0 |
-| `CONSUMIDO` | Agotado por producción | 2 | Cantidad actual = 0 (por producción) |
-| `VENDIDO` | Agotado por venta | 2 | Cantidad actual = 0 (por venta) |
-| `DEVUELTO` | Agotado por devolución | 2 | Cantidad actual = 0 (por devolución compra) |
-| `RECALL` | Retirado del mercado | 2 | Cantidad actual = 0 (por retiro mercado) |
-| `DESCARTADO` | Destruido | 2 | Cantidad actual = 0 (por destrucción) |
-
-### Matriz de Transiciones Válidas
-
-```
-                    DESTINO
-           ┌────────────────────────────────────────────────────────────────┐
-           │ NUEVO │ DISP │ EN_USO │ CONSU │ VEND │ DEVUE │ RECALL │ DESCA │
-    ┌──────┼───────┼──────┼────────┼───────┼──────┼───────┼────────┼───────┤
- O  │NUEVO │   -   │  ✓   │   ✓    │   ✓   │  ✓   │   ✓   │   ✓    │   ✓   │
- R  │DISP  │   -   │  -   │   ✓    │   ✓   │  ✓   │   ✓   │   ✓    │   ✓   │
- I  │EN_USO│   ✓*  │  ✓*  │   -    │   ✓   │  ✓   │   ✓   │   ✓    │   ✓   │
- G  │CONSU │   ✓*  │  ✓*  │   ✓*   │   -   │  -   │   -   │   -    │   -   │
- E  │VEND  │   ✓*  │  ✓*  │   ✓*   │   -   │  -   │   -   │   -    │   -   │
- N  │DEVUE │   ✓*  │  ✓*  │   ✓*   │   -   │  -   │   -   │   -    │   -   │
-    │RECALL│   ✓*  │  ✓*  │   ✓*   │   -   │  -   │   -   │   -    │   -   │
-    │DESCA │   -   │  -   │   -    │   -   │  -   │   -   │   -    │   -   │
-    └──────┴───────┴──────┴────────┴───────┴──────┴───────┴────────┴───────┘
-
-    ✓  = Transición válida (operación normal)
-    ✓* = Transición válida solo por REVERSO (CU26)
-    -  = Transición no válida
-```
+| Estado | Descripción | Condición |
+|--------|-------------|-----------|
+| `NUEVO` | Lote recién ingresado | Cantidad inicial = cantidad actual |
+| `DISPONIBLE` | Disponible para operaciones | Cantidad inicial = cantidad actual (trazas) |
+| `EN_USO` | Parcialmente consumido | Cantidad inicial > cantidad actual > 0 |
+| `CONSUMIDO` | Agotado por producción | Cantidad actual = 0 (por producción) |
+| `VENDIDO` | Agotado por venta | Cantidad actual = 0 (por venta) |
+| `DEVUELTO` | Agotado por devolución | Cantidad actual = 0 (por devolución compra) |
+| `RECALL` | Retirado del mercado | Cantidad actual = 0 (por retiro mercado) |
+| `DESCARTADO` | Destruido | Cantidad actual = 0 (por destrucción) |
 
 ### Transiciones por Caso de Uso
 
