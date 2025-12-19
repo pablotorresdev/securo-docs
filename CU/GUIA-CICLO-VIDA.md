@@ -830,4 +830,76 @@ Los siguientes estados son **terminales** - el lote no puede recuperarse para us
 
 ---
 
+
+## Estados de Cantidad
+
+Estos estan relacionados con la existencia fisica de los productos, aplican a lote/bulto/traza según su cantidad disponible.
+
+### Valores
+
+| Estado | Descripción | Condición |
+|--------|-------------|-----------|
+| `NUEVO` | Lote recién ingresado | Cantidad inicial = cantidad actual |
+| `DISPONIBLE` | Unidad trazada disponible | Aplica a cada traza |
+| `EN_USO` | Parcialmente consumido | Cantidad inicial > cantidad actual > 0 |
+| `CONSUMIDO` | Agotado por producción | Cantidad actual = 0 (por producción) |
+| `VENDIDO` | Agotado por venta | Cantidad actual = 0 (por venta) |
+| `DEVUELTO` | Agotado por devolución | Cantidad actual = 0 (por devolución compra) |
+| `RECALL` | Retirado del mercado | Cantidad actual = 0 (por retiro mercado) |
+| `DESCARTADO` | Destruido | Cantidad actual = 0 (por destrucción) |
+
+### Transiciones por Caso de Uso
+
+| CU | Operación | Estado Inicial | Estado Final |
+|----|-----------|----------------|--------------|
+| CU1 | Alta Ingreso Compra | - | NUEVO |
+| CU3 | Muestreo | NUEVO | EN_USO |
+| CU4 | Devolución Compra | NUEVO/EN_USO | DEVUELTO |
+| CU7 | Consumo Producción | NUEVO/EN_USO | EN_USO/CONSUMIDO |
+| CU20 | Ingreso Producción | - | NUEVO |
+| CU22 | Venta Producto | NUEVO/EN_USO | EN_USO/VENDIDO |
+| CU23 | Devolución Venta | VENDIDO | EN_USO/NUEVO |
+| CU24 | Retiro Mercado | VENDIDO/EN_USO | RECALL |
+| CU25 | Ajuste Stock | * | * |
+| CU26 | Reverso Movimiento | * | (restaura estado anterior) |
+
+---
+
+## Estados de Calidad
+
+Define el estado de aprobación del lote según análisis de calidad.
+
+### Valores
+
+| Dictamen | Descripción | Tipo |
+|----------|-------------|------|
+| `RECIBIDO` | Lote recién ingresado, pendiente análisis | Inicial |
+| `CUARENTENA` | En espera de resultado de análisis | Transitorio |
+| `APROBADO` | Aprobado por control de calidad | Final positivo |
+| `RECHAZADO` | Rechazado por control de calidad | Final negativo |
+| `ANULADO` | Análisis anulado | Excepcional |
+| `CANCELADO` | Operación cancelada | Excepcional |
+| `ANALISIS_EXPIRADO` | La fecha de re-análisis venció | Automático |
+| `VENCIDO` | Lote vencido por fecha | Automático |
+| `LIBERADO` | Liberado para venta | Final comercial |
+| `DEVOLUCION_CLIENTES` | Devuelto por clientes | Comercial |
+| `RETIRO_MERCADO` | Retirado del mercado (recall) | Comercial |
+
+### Transiciones por Caso de Uso
+
+| CU | Operación | Dictamen Inicial | Dictamen Final |
+|----|-----------|------------------|----------------|
+| CU1 | Alta Ingreso Compra | - | RECIBIDO |
+| CU2 | Dictamen Cuarentena | RECIBIDO | CUARENTENA |
+| CU5/6 | Resultado Análisis | CUARENTENA | APROBADO/RECHAZADO |
+| CU8 | Reanálisis Lote | APROBADO | APROBADO(Analisis asignado) |
+| CU9 | Análisis Expirado | RECIBIDO/CUARENTENA/APROBADO | ANALISIS_EXPIRADO |
+| CU10 | Vencimiento Lote | APROBADO/LIBERADO | VENCIDO |
+| CU20 | Ingreso Producción | - | RECIBIDO |
+| CU21 | Confirmar Lote Liberado | APROBADO | LIBERADO |
+| CU23 | Devolución Venta | LIBERADO | DEVOLUCION_CLIENTES |
+| CU24 | Retiro Mercado | LIBERADO | RETIRO_MERCADO |
+
+---
+
 **Fin del Documento - GUIA-CICLO-VIDA v1.0**
