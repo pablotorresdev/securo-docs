@@ -286,7 +286,6 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Devolver al proveedor | CU4 Devolucion |
 | Ajuste/descarte | CU25 Ajuste |
 | Error en dictamen | CU26 Reverso |
-| Devolver al proveedor | CU4 Devolucion |
 
 ---
 
