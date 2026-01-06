@@ -524,14 +524,22 @@ Si un analisis fue registrado incorrectamente:
 
 ### 8.4 Reanalisis
 
-Para solicitar nuevo analisis de un lote:
+Para solicitar nuevo analisis de un lote aprobado:
 
 1. Navegue a **Calidad > Reanalisis**
-2. Seleccione el lote
-3. Ingrese el motivo del reanalisis
-4. Haga clic en **Solicitar Reanalisis**
+2. Seleccione el lote APROBADO a reanalizar
+3. Ingrese la fecha del reanalisis
+4. Ingrese el numero de reanalisis con formato:
+   - **Prefijo**: Seleccione MP, ME, MPD, PTD, SE o PT
+   - **Digitos**: Ingrese 5 digitos en formato N-NNNN (ej: 1-0001)
+   - El sistema combinara automaticamente (ej: MP-1-0001)
+5. Ingrese el motivo del reanalisis (minimo 20 caracteres)
+6. Haga clic en **Vista Previa**
+7. Revise los datos en la pantalla de confirmacion
+8. Haga clic en **Confirmar e Iniciar Reanalisis** para completar la operacion
+   - O haga clic en **Volver a Editar** si necesita corregir algun dato
 
-El dictamen del lote vuelve a CUARENTENA.
+**Nota:** El lote permanece APROBADO y disponible para uso mientras el reanalisis esta en curso.
 
 ### 8.5 Dictamen de Cuarentena
 

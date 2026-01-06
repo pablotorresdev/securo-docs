@@ -22,16 +22,16 @@
    - [CU9 - Analisis Expirado (Automatico)](#cu9---analisis-expirado-automatico)
    - [CU10 - Vencimiento Lote (Automatico)](#cu10---vencimiento-lote-automatico)
    - [CU11 - Anulacion Analisis](#cu11---anulacion-analisis)
-4. [Ciclo de Ventas (CU20-CU24, CU27)](#ciclo-de-ventas)
+4. [Ciclo de Ventas (CU20-CU25, CU21)](#ciclo-de-ventas)
    - [CU20 - Ingreso Produccion](#cu20---ingreso-produccion)
-   - [CU21 - Confirmar Lote Liberado](#cu21---confirmar-lote-liberado)
-   - [CU22 - Venta Producto](#cu22---venta-producto)
-   - [CU23 - Devolucion Venta](#cu23---devolucion-venta)
-   - [CU24 - Retiro de Mercado (Recall)](#cu24---retiro-de-mercado-recall)
-   - [CU27 - Trazado de Lote](#cu27---trazado-de-lote)
-5. [Operaciones Transversales (CU25-CU26)](#operaciones-transversales)
-   - [CU25 - Ajuste Stock](#cu25---ajuste-stock)
-   - [CU26 - Reverso de Movimiento](#cu26---reverso-de-movimiento)
+   - [CU22 - Confirmar Lote Liberado](#cu22---confirmar-lote-liberado)
+   - [CU23 - Venta Producto](#cu23---venta-producto)
+   - [CU24 - Devolucion Venta](#cu24---devolucion-venta)
+   - [CU25 - Retiro de Mercado (Recall)](#cu25---retiro-de-mercado-recall)
+   - [CU21 - Trazado de Lote](#cu21---trazado-de-lote)
+5. [Operaciones Transversales (CU30-CU31)](#operaciones-transversales)
+   - [CU30 - Ajuste Stock](#cu30---ajuste-stock)
+   - [CU31 - Reverso de Movimiento](#cu31---reverso-de-movimiento)
 6. [Diagrama General del Ciclo](#diagrama-general-del-ciclo)
 
 ---
@@ -101,15 +101,15 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | CU10 | Vencimiento Lote | SISTEMA (automatico) |
 | CU11 | Anulacion Analisis | ADMIN, GERENTE_CONTROL_CALIDAD |
 | CU20 | Ingreso Produccion | ADMIN, SUPERVISOR_PLANTA |
-| CU21 | Confirmar Liberado | ADMIN, GERENTE_GARANTIA_CALIDAD, DT |
-| CU22 | Venta Producto | ADMIN, ANALISTA_PLANTA |
-| CU23 | Devolucion Venta | ADMIN, GERENTE_GARANTIA_CALIDAD |
-| CU24 | Retiro Mercado | ADMIN, GERENTE_GARANTIA_CALIDAD |
-| CU25 | Ajuste Stock | ADMIN, SUPERVISOR_PLANTA, ANALISTA_PLANTA |
-| CU26 | Reverso Movimiento | Todos excepto AUDITOR (*) |
-| CU27 | Trazado Lote | ADMIN, GERENTE_GARANTIA_CALIDAD, DT |
+| CU22 | Confirmar Liberado | ADMIN, GERENTE_GARANTIA_CALIDAD, DT |
+| CU23 | Venta Producto | ADMIN, ANALISTA_PLANTA |
+| CU24 | Devolucion Venta | ADMIN, GERENTE_GARANTIA_CALIDAD |
+| CU25 | Retiro Mercado | ADMIN, GERENTE_GARANTIA_CALIDAD |
+| CU30 | Ajuste Stock | ADMIN, SUPERVISOR_PLANTA, ANALISTA_PLANTA |
+| CU31 | Reverso Movimiento | Todos excepto AUDITOR (*) |
+| CU21 | Trazado Lote | ADMIN, GERENTE_GARANTIA_CALIDAD, DT |
 
-(*) CU26 tiene validacion adicional: el creador del movimiento siempre puede revertirlo; usuarios de jerarquia superior pueden revertir movimientos de usuarios inferiores.
+(*) CU31 tiene validacion adicional: el creador del movimiento siempre puede revertirlo; usuarios de jerarquia superior pueden revertir movimientos de usuarios inferiores.
 
 ---
 
@@ -136,8 +136,8 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 |-----------|--------------|
 | Enviar a analisis | CU2 Cuarentena |
 | Devolver al proveedor | CU4 Devolucion |
-| Ajuste de cantidad | CU25 Ajuste |
-| Error en el ingreso | CU26 Reverso |
+| Ajuste de cantidad | CU30 Ajuste |
+| Error en el ingreso | CU31 Reverso |
 
 ---
 
@@ -169,7 +169,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Situacion | CU Aplicable |
 |-----------|--------------|
 | Tomar muestra | CU3 Muestreo |
-| Error en asignacion | CU26 Reverso |
+| Error en asignacion | CU31 Reverso |
 | Devolver al proveedor | CU4 Devolucion |
 
 ---
@@ -196,7 +196,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 |-----------|--------------|
 | Resultado aprobado | CU5 Aprobado |
 | Resultado rechazado | CU6 Rechazado |
-| Error en muestreo | CU26 Reverso |
+| Error en muestreo | CU31 Reverso |
 | Devolver al proveedor | CU4 Devolucion |
 
 ---
@@ -221,7 +221,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 **Caminos Posibles:**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Error en devolucion | CU26 Reverso |
+| Error en devolucion | CU31 Reverso |
 
 > **Nota:** Si se devuelve la totalidad, el lote queda en estado DEVUELTO (terminal).
 
@@ -252,15 +252,15 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Devolver al proveedor | CU4 Devolucion |
 | Usar en produccion | CU7 Consumo |
 | Requiere reanalisis futuro | CU8 Reanalisis |
-| Ajuste de cantidad | CU25 Ajuste |
-| Error en dictamen | CU26 Reverso |
+| Ajuste de cantidad | CU30 Ajuste |
+| Error en dictamen | CU31 Reverso |
 
 **Para Unidades de Venta (UV):**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Confirmar para venta | CU21 Liberar |
-| Trazado de unidades | CU27 Trazado |
-| Error en dictamen | CU26 Reverso |
+| Confirmar para venta | CU22 Liberar |
+| Trazado de unidades | CU21 Trazado |
+| Error en dictamen | CU31 Reverso |
 
 ---
 
@@ -284,8 +284,8 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Situacion | CU Aplicable |
 |-----------|--------------|
 | Devolver al proveedor | CU4 Devolucion |
-| Ajuste/descarte | CU25 Ajuste |
-| Error en dictamen | CU26 Reverso |
+| Ajuste/descarte | CU30 Ajuste |
+| Error en dictamen | CU31 Reverso |
 
 ---
 
@@ -309,7 +309,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 **Caminos Posibles:**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Error en consumo | CU26 Reverso |
+| Error en consumo | CU31 Reverso |
 | Devolver al proveedor | CU4 Devolucion | 
 
 > **Nota:** CU7 es una operacion de BAJA. Si se consume la totalidad, el lote queda CONSUMIDO (terminal).
@@ -337,7 +337,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Situacion | CU Aplicable |
 |-----------|--------------|
 | Tomar muestra | CU3 Muestreo |
-| Error en reanalisis | CU26 Reverso |
+| Error en reanalisis | CU31 Reverso |
 
 ---
 
@@ -368,7 +368,7 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 | Situacion | CU Aplicable |
 |-----------|--------------|
 | Recuperar lote | CU2 Cuarentena (nuevo analisis) |
-| Ajuste/descarte | CU25 Ajuste |
+| Ajuste/descarte | CU30 Ajuste |
 
 > **Nota:** No existe reverso para CU9. La unica forma de recuperar es realizar nuevo analisis.
 
@@ -402,9 +402,9 @@ La siguiente tabla resume los perfiles de usuario autorizados para ejecutar cada
 **Caminos Posibles:**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Destruccion documentada | CU25 Ajuste Stock |
+| Destruccion documentada | CU30 Ajuste Stock |
 
-> **Nota:** VENCIDO es un estado terminal. No existe reverso ni recuperacion. Solo se permite CU25 para registrar la destruccion.
+> **Nota:** VENCIDO es un estado terminal. No existe reverso ni recuperacion. Solo se permite CU30 para registrar la destruccion.
 
 ---
 
@@ -476,14 +476,14 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 | Situacion | CU Aplicable |
 |-----------|--------------|
 | Enviar a analisis | CU2 Cuarentena |
-| Ajuste de cantidad | CU25 Ajuste |
-| Error en el ingreso | CU26 Reverso |
+| Ajuste de cantidad | CU30 Ajuste |
+| Error en el ingreso | CU31 Reverso |
 
-> **Nota:** El trazado NO se realiza en CU20. Una vez que el lote este LIBERADO (post CU21), se puede ejecutar CU27 para asignar trazas.
+> **Nota:** El trazado NO se realiza en CU20. Una vez que el lote este LIBERADO (post CU22), se puede ejecutar CU21 para asignar trazas.
 
 ---
 
-### CU21 - Confirmar Lote Liberado
+### CU22 - Confirmar Lote Liberado
 
 **Perfiles Autorizados:** `ADMIN`, `GERENTE_GARANTIA_CALIDAD`, `DT`
 
@@ -491,7 +491,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 [APROBADO (UV)]
         |
         v
-   [CU21 Liberar]
+   [CU22 Liberar]
         |
         v
   [Lote LIBERADO]
@@ -506,16 +506,16 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 **Caminos Posibles:**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Trazado (si aplica) | CU27 Trazado |
-| Venta del producto | CU22 Venta |
+| Trazado (si aplica) | CU21 Trazado |
+| Venta del producto | CU23 Venta |
 | Reanalisis preventivo | CU8 Reanalisis |
-| Error en liberacion | CU26 Reverso |
+| Error en liberacion | CU31 Reverso |
 
 > **Nota:** El trazado es condicional segun destino. Exportaciones pueden no requerir trazabilidad ANMAT.
 
 ---
 
-### CU22 - Venta Producto
+### CU23 - Venta Producto
 
 **Perfiles Autorizados:** `ADMIN`, `ANALISTA_PLANTA`
 
@@ -523,7 +523,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 [LIBERADO (UV)]
         |
         v
-   [CU22 Venta]
+   [CU23 Venta]
         |
         v
 [Lote con stock reducido]
@@ -536,13 +536,13 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 **Caminos Posibles:**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Cliente devuelve | CU23 Devolucion Venta |
-| Problema de calidad | CU24 Recall |
-| Error en venta | CU26 Reverso |
+| Cliente devuelve | CU24 Devolucion Venta |
+| Problema de calidad | CU25 Recall |
+| Error en venta | CU31 Reverso |
 
 ---
 
-### CU23 - Devolucion Venta
+### CU24 - Devolucion Venta
 
 **Perfiles Autorizados:** `ADMIN`, `GERENTE_GARANTIA_CALIDAD`
 
@@ -550,7 +550,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 [VENDIDO/PARCIAL]
         |
         v
-   [CU23 Devolucion]
+   [CU24 Devolucion]
         |
         v
 [Lote derivado _D_#]
@@ -563,14 +563,14 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 | Situacion | CU Aplicable |
 |-----------|--------------|
 | Analizar devolucion | CU2 Cuarentena |
-| Ajuste/descarte | CU25 Ajuste |
-| Error en devolucion | CU26 Reverso |
+| Ajuste/descarte | CU30 Ajuste |
+| Error en devolucion | CU31 Reverso |
 
 > **Nota:** El lote devuelto (_D_#) puede ser enviado a analisis para determinar si es reutilizable.
 
 ---
 
-### CU24 - Retiro de Mercado (Recall)
+### CU25 - Retiro de Mercado (Recall)
 
 **Perfiles Autorizados:** `ADMIN`, `GERENTE_GARANTIA_CALIDAD`
 
@@ -578,7 +578,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 [VENDIDO/RECALL_CLIENTE]
         |
         v
-   [CU24 Retiro]
+   [CU25 Retiro]
         |
         v
 [Lote derivado _R_#]
@@ -590,15 +590,15 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 **Caminos Posibles:**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Error en el recall | CU26 Reverso |
-| Ajuste de cantidad | CU25 Ajuste Stock |
-| Destruccion del lote | CU25 Ajuste Stock (descarte) |
+| Error en el recall | CU31 Reverso |
+| Ajuste de cantidad | CU30 Ajuste Stock |
+| Destruccion del lote | CU30 Ajuste Stock (descarte) |
 
-> **Nota:** Los lotes con dictamen RETIRO_MERCADO **no pueden** enviarse a analisis (CU2). El recall es un estado terminal que solo permite ajustes, reverso o destruccion documentada mediante CU25.
+> **Nota:** Los lotes con dictamen RETIRO_MERCADO **no pueden** enviarse a analisis (CU2). El recall es un estado terminal que solo permite ajustes, reverso o destruccion documentada mediante CU30.
 
 ---
 
-### CU27 - Trazado de Lote
+### CU21 - Trazado de Lote
 
 **Perfiles Autorizados:** `ADMIN`, `GERENTE_GARANTIA_CALIDAD`, `DT`
 
@@ -606,7 +606,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 [LOTE LIBERADO UV]
         |
         v
-   [CU27 Trazado]
+   [CU21 Trazado]
         |
         v
 [Trazas asignadas]
@@ -623,9 +623,9 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 **Caminos Posibles:**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Venta del producto trazado | CU22 Venta |
-| Error en trazado | CU26 Reverso |
-| Devolucion post-venta | CU23 Devolucion Venta |
+| Venta del producto trazado | CU23 Venta |
+| Error en trazado | CU31 Reverso |
+| Devolucion post-venta | CU24 Devolucion Venta |
 
 > **Nota:** El trazado es condicional segun el destino del producto. Exportaciones pueden no requerir trazabilidad ANMAT. El sistema asigna rangos de trazas (ej: 50001-50100 para 100 unidades).
 
@@ -633,7 +633,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 
 ## Operaciones Transversales
 
-### CU25 - Ajuste Stock
+### CU30 - Ajuste Stock
 
 **Perfiles Autorizados:** `ADMIN`, `SUPERVISOR_PLANTA`, `ANALISTA_PLANTA`
 
@@ -641,7 +641,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 [CUALQUIER LOTE CON STOCK]
         |
         v
-   [CU25 Ajuste]
+   [CU30 Ajuste]
         |
         v
 [Cantidad modificada]
@@ -652,19 +652,19 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 
 **Entradas Posibles:**
 - Lotes en cualquier estado que tengan stock > 0
-- Caso especial: lotes VENCIDO y RETIRO_MERCADO solo permiten CU25 para registrar destruccion
+- Caso especial: lotes VENCIDO y RETIRO_MERCADO solo permiten CU30 para registrar destruccion
 
 **Caminos Posibles:**
 | Situacion | CU Aplicable |
 |-----------|--------------|
-| Error en el ajuste | CU26 Reverso |
+| Error en el ajuste | CU31 Reverso |
 | Continua ciclo normal | Segun dictamen actual del lote |
 
-> **Nota:** CU25 es una operacion de BAJA que reduce cantidad sin cambiar dictamen. Es la unica operacion permitida para lotes VENCIDO y RETIRO_MERCADO (destruccion documentada).
+> **Nota:** CU30 es una operacion de BAJA que reduce cantidad sin cambiar dictamen. Es la unica operacion permitida para lotes VENCIDO y RETIRO_MERCADO (destruccion documentada).
 
 ---
 
-### CU26 - Reverso de Movimiento
+### CU31 - Reverso de Movimiento
 
 **Perfiles Autorizados:** `ADMIN`, `DT`, `GERENTE_GARANTIA_CALIDAD`, `GERENTE_CONTROL_CALIDAD`, `SUPERVISOR_PLANTA`, `ANALISTA_CONTROL_CALIDAD`, `ANALISTA_PLANTA`
 
@@ -674,7 +674,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 [MOVIMIENTO EXISTENTE]
         |
         v
-   [CU26 Reverso]
+   [CU31 Reverso]
         |
         v
 [Estado anterior restaurado]
@@ -685,9 +685,9 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 **Tipos de Reverso:**
 | Tipo Movimiento Original | Efecto del Reverso |
 |--------------------------|-------------------|
-| ALTA (CU1, CU20, CU23, CU24) | Elimina el lote/devuelve stock |
-| BAJA (CU4, CU7, CU22, CU25) | Restaura el stock consumido |
-| MODIFICACION (CU2, CU5, CU6, CU8, CU11, CU21) | Restaura dictamen anterior |
+| ALTA (CU1, CU20, CU24, CU25) | Elimina el lote/devuelve stock |
+| BAJA (CU4, CU7, CU23, CU30) | Restaura el stock consumido |
+| MODIFICACION (CU2, CU5, CU6, CU8, CU11, CU22) | Restaura dictamen anterior |
 
 **Autorizacion Adicional (ReversoAuthorizationService):**
 - El creador del movimiento siempre puede revertirlo
@@ -703,7 +703,7 @@ Ejemplos validos: `25010001`, `25010001A`, `25120015B`
 |-----------|--------------|
 | Despues del reverso | Retoma el flujo segun el estado restaurado |
 
-> **Nota:** CU26 es una operacion de contingencia. Cada reverso genera su propio movimiento de auditoria referenciando el movimiento original.
+> **Nota:** CU31 es una operacion de contingencia. Cada reverso genera su propio movimiento de auditoria referenciando el movimiento original.
 
 ---
 
@@ -741,20 +741,20 @@ COMPRAS/MATERIAS PRIMAS                      PRODUCCION/VENTAS
 APROBADO   RECHAZADO    |               APROBADO   RECHAZADO |
    |         |          |                  |                 |
    |    [CU4 Dev]       |                  v                 |
-   |         |          |             [CU21 Liberar]         |
+   |         |          |             [CU22 Liberar]         |
    v         v          |                  |                 |
 [CU7 Consumo] --------->|                  v                 |
    |                    |             [LIBERADO]             |
    |                    |                  |                 |
-   |                    |            [CU27 Trazado]          |
+   |                    |            [CU21 Trazado]          |
    |                    |                  |                 |
    |                    |                  v                 |
-   |                    |             [CU22 Venta]           |
+   |                    |             [CU23 Venta]           |
    |                    |                  |                 |
    +--------------------+             +----+----+            |
                                       |         |            |
                                       v         v            |
-                                 [CU23 Dev] [CU24 Recall]    |
+                                 [CU24 Dev] [CU25 Recall]    |
                                       |         |            |
                                       v         v            |
                                  [_D_# lote] [_R_# lote]     |
@@ -772,8 +772,8 @@ PROCESOS AUTOMATICOS (5:00 AM)
 
 OPERACIONES TRANSVERSALES
 -------------------------
-[CU25] Ajuste Stock: Cualquier lote con stock (unica opcion para VENCIDO/RETIRO_MERCADO)
-[CU26] Reverso: Revertir cualquier movimiento (excepto CU9/CU10)
+[CU30] Ajuste Stock: Cualquier lote con stock (unica opcion para VENCIDO/RETIRO_MERCADO)
+[CU31] Reverso: Revertir cualquier movimiento (excepto CU9/CU10)
 
 ================================================================================
 ```
@@ -786,11 +786,11 @@ Los siguientes estados son **terminales** - el lote no puede recuperarse para us
 
 | Estado | CU que lo genera | Unica operacion permitida |
 |--------|------------------|---------------------------|
-| VENCIDO | CU10 (automatico) | CU25 (destruccion) |
-| RETIRO_MERCADO | CU24 | CU25 (destruccion) |
+| VENCIDO | CU10 (automatico) | CU30 (destruccion) |
+| RETIRO_MERCADO | CU25 | CU30 (destruccion) |
 | DEVUELTO | CU4 (total) | Ninguna |
 | CONSUMIDO | CU7 (total) | Ninguna |
-| VENDIDO | CU22 (total) | CU23, CU24 |
+| VENDIDO | CU23 (total) | CU24, CU25 |
 
 ---
 
@@ -801,16 +801,16 @@ Los siguientes estados son **terminales** - el lote no puede recuperarse para us
 |----|--------|--------|
 | CU1 | Ingreso Compra | Proveedor externo |
 | CU20 | Ingreso Produccion | Fabricacion interna |
-| CU23 | Devolucion Venta | Cliente |
-| CU24 | Retiro Mercado | Mercado (recall) |
+| CU24 | Devolucion Venta | Cliente |
+| CU25 | Retiro Mercado | Mercado (recall) |
 
 ### BAJA (Egreso de stock)
 | CU | Nombre | Destino |
 |----|--------|---------|
 | CU4 | Devolucion Compra | Proveedor |
 | CU7 | Consumo Produccion | Produccion interna |
-| CU22 | Venta Producto | Cliente |
-| CU25 | Ajuste Stock | Ajuste/Destruccion |
+| CU23 | Venta Producto | Cliente |
+| CU30 | Ajuste Stock | Ajuste/Destruccion |
 
 ### MODIFICACION (Cambio de estado)
 | CU | Nombre | Cambio |
@@ -823,9 +823,9 @@ Los siguientes estados son **terminales** - el lote no puede recuperarse para us
 | CU9 | Analisis Expirado | -> ANALISIS_EXPIRADO |
 | CU10 | Vencimiento | -> VENCIDO |
 | CU11 | Anulacion Analisis | -> estado anterior |
-| CU21 | Confirmar Liberado | -> LIBERADO |
-| CU26 | Reverso | -> estado anterior |
-| CU27 | Trazado Lote | Asigna trazas |
+| CU22 | Confirmar Liberado | -> LIBERADO |
+| CU31 | Reverso | -> estado anterior |
+| CU21 | Trazado Lote | Asigna trazas |
 
 ---
 
@@ -856,11 +856,11 @@ Estos estan relacionados con la existencia fisica de los productos, aplican a lo
 | CU4 | Devolución Compra | NUEVO/EN_USO | DEVUELTO |
 | CU7 | Consumo Producción | NUEVO/EN_USO | EN_USO/CONSUMIDO |
 | CU20 | Ingreso Producción | - | NUEVO |
-| CU22 | Venta Producto | NUEVO/EN_USO | EN_USO/VENDIDO |
-| CU23 | Devolución Venta | VENDIDO | EN_USO/NUEVO |
-| CU24 | Retiro Mercado | VENDIDO/EN_USO | RECALL |
-| CU25 | Ajuste Stock | * | * |
-| CU26 | Reverso Movimiento | * | (restaura estado anterior) |
+| CU23 | Venta Producto | NUEVO/EN_USO | EN_USO/VENDIDO |
+| CU24 | Devolución Venta | VENDIDO | EN_USO/NUEVO |
+| CU25 | Retiro Mercado | VENDIDO/EN_USO | RECALL |
+| CU30 | Ajuste Stock | * | * |
+| CU31 | Reverso Movimiento | * | (restaura estado anterior) |
 
 ---
 
@@ -895,9 +895,9 @@ Define el estado de aprobación del lote según análisis de calidad.
 | CU9 | Análisis Expirado | RECIBIDO/CUARENTENA/APROBADO | ANALISIS_EXPIRADO |
 | CU10 | Vencimiento Lote | APROBADO/LIBERADO | VENCIDO |
 | CU20 | Ingreso Producción | - | RECIBIDO |
-| CU21 | Confirmar Lote Liberado | APROBADO | LIBERADO |
-| CU23 | Devolución Venta | LIBERADO | DEVOLUCION_CLIENTES |
-| CU24 | Retiro Mercado | LIBERADO | RETIRO_MERCADO |
+| CU22 | Confirmar Lote Liberado | APROBADO | LIBERADO |
+| CU24 | Devolución Venta | LIBERADO | DEVOLUCION_CLIENTES |
+| CU25 | Retiro Mercado | LIBERADO | RETIRO_MERCADO |
 
 ---
 

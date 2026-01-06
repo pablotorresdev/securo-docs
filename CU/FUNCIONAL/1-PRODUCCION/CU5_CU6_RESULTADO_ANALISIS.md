@@ -286,16 +286,16 @@ Muestra:
 | CU | Nombre | Descripcion |
 |----|--------|-------------|
 | CU7 | Consumo Produccion | Usar el material aprobado en produccion |
-| CU21 | Confirmar Lote Liberado | Liberar lote de Unidad de Venta para venta |
+| CU22 | Confirmar Lote Liberado | Liberar lote de Unidad de Venta para venta |
 | CU8 | Reanalisis | Programar nuevo analisis del lote aprobado |
-| CU25 | Ajuste Stock | Ajustar cantidades si es necesario |
+| CU30 | Ajuste Stock | Ajustar cantidades si es necesario |
 
 ### 8.2 Despues de CU6 (RECHAZADO)
 
 | CU | Nombre | Descripcion |
 |----|--------|-------------|
 | CU4 | Devolucion Compra | Devolver el lote rechazado al proveedor |
-| CU25 | Ajuste Stock | Registrar destruccion/descarte del material |
+| CU30 | Ajuste Stock | Registrar destruccion/descarte del material |
 
 ### 8.3 Flujo Tipico Completo
 
@@ -377,7 +377,7 @@ o Venta
 - Analisis ANA-2025-0180: Dictamen RECHAZADO
 - Lote: Dictamen cambia de CUARENTENA a RECHAZADO
 - Movimiento de MODIFICACION con "[CU6] Rechazado por contaminacion..."
-- Siguiente paso: CU4 (Devolucion) o CU25 (Ajuste para descarte)
+- Siguiente paso: CU4 (Devolucion) o CU30 (Ajuste para descarte)
 
 ### 9.3 CU5: Aprobacion de Unidad de Venta
 
@@ -402,7 +402,7 @@ o Venta
 **Nota:** El campo Fecha Reanalisis no aparece para Unidades de Venta.
 
 **Resultado:**
-- Lote APROBADO, listo para CU21 (Confirmar Liberacion)
+- Lote APROBADO, listo para CU22 (Confirmar Liberacion)
 
 ### 9.4 Caso Error: Sin Muestreo Previo
 
@@ -431,7 +431,7 @@ o Venta
 R: No. El sistema valida que exista un movimiento de MUESTREO asociado al numero de analisis.
 
 **P: ¿Puedo cambiar el resultado despues de dictaminar?**
-R: No directamente. Deberia usar CU26 (Reverso) si fue un error, o CU8 (Reanalisis) si necesita un nuevo analisis.
+R: No directamente. Deberia usar CU31 (Reverso) si fue un error, o CU8 (Reanalisis) si necesita un nuevo analisis.
 
 **P: ¿Que diferencia hay entre fecha de reanalisis y fecha de vencimiento?**
 R: La fecha de reanalisis indica cuando se debe volver a analizar el lote para confirmar que sigue conforme. La fecha de vencimiento indica cuando el material ya no puede usarse.
@@ -442,10 +442,10 @@ R: Las Unidades de Venta son productos terminados que no se reanalizan; se vende
 ### 10.2 Sobre los Resultados
 
 **P: ¿Que pasa si apruebo un lote por error?**
-R: Use CU26 (Reverso) si fue inmediatamente despues. Si ya se uso el lote, debera documentar la incidencia segun procedimientos de calidad.
+R: Use CU31 (Reverso) si fue inmediatamente despues. Si ya se uso el lote, debera documentar la incidencia segun procedimientos de calidad.
 
 **P: ¿Que pasa con el lote rechazado?**
-R: Queda disponible para devolucion (CU4) o ajuste de stock (CU25). No puede usarse en produccion ni venderse.
+R: Queda disponible para devolucion (CU4) o ajuste de stock (CU30). No puede usarse en produccion ni venderse.
 
 **P: ¿El titulo es obligatorio para aprobar?**
 R: No es obligatorio, pero tiene valor por defecto 100%. Se usa para APIs donde es importante registrar la pureza.
@@ -465,7 +465,7 @@ R: Para facilitar la busqueda. Si el usuario conoce el numero de analisis, puede
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si la fecha de analisis es incorrecta?**
-R: Use CU26 (Reverso) para anular el resultado y vuelva a dictaminar con la fecha correcta.
+R: Use CU31 (Reverso) para anular el resultado y vuelva a dictaminar con la fecha correcta.
 
 **P: ¿Puedo dictaminar el mismo lote dos veces?**
 R: No en el mismo analisis. Si necesita un nuevo analisis despues de aprobar, use CU8 (Reanalisis).
@@ -500,7 +500,7 @@ R: No en el mismo analisis. Si necesita un nuevo analisis despues de aprobar, us
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
 | CU7 | Consumo Produccion | Lote APROBADO tipo API/Excipiente |
-| CU21 | Confirmar Liberacion | Lote APROBADO tipo Unidad de Venta |
+| CU22 | Confirmar Liberacion | Lote APROBADO tipo Unidad de Venta |
 | CU8 | Reanalisis | Lote APROBADO que requiere nuevo analisis |
 
 ### Operaciones Siguientes (despues de CU6 - RECHAZADO)
@@ -508,7 +508,7 @@ R: No en el mismo analisis. Si necesita un nuevo analisis despues de aprobar, us
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
 | CU4 | Devolucion Compra | Lote RECHAZADO a devolver |
-| CU25 | Ajuste Stock | Lote RECHAZADO a descartar |
+| CU30 | Ajuste Stock | Lote RECHAZADO a descartar |
 
 ---
 

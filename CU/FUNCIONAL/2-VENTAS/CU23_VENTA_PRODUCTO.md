@@ -1,4 +1,4 @@
-# CU22 - VENTA PRODUCTO: Especificacion Funcional
+# CU23 - VENTA PRODUCTO: Especificacion Funcional
 
 **Version:** 1.0
 **Fecha:** 2025-12-06
@@ -31,22 +31,22 @@ Este caso de uso permite registrar la **venta de productos terminados** (Unidade
 
 ### 1.2 Cuando Usar Este CU
 
-Usar CU22 cuando:
+Usar CU23 cuando:
 - Se concreta una venta de productos terminados a un cliente
 - El lote esta liberado y listo para comercializacion
 - Se necesita registrar la salida de stock por motivo de venta
 
-**NO usar CU22 cuando:**
-- El lote no esta liberado → usar primero **CU21 (Confirmar Lote Liberado)**
+**NO usar CU23 cuando:**
+- El lote no esta liberado → usar primero **CU22 (Confirmar Lote Liberado)**
 - El lote no es de tipo Unidad de Venta → las materias primas no se venden
 - El lote esta en RECALL → no puede venderse
-- Se quiere registrar una devolucion → usar **CU23 (Devolucion Venta)**
+- Se quiere registrar una devolucion → usar **CU24 (Devolucion Venta)**
 
 ### 1.3 Contexto en el Ciclo de Vida
 
 ```
 Produccion/Compra -> Cuarentena -> Analisis -> Aprobado -> LIBERADO -> VENTA
-     (CU1/CU20)        (CU2)       (CU5)                    (CU21)    [CU22]
+     (CU1/CU20)        (CU2)       (CU5)                    (CU22)    [CU23]
 ```
 
 ### 1.4 Resultado del CU
@@ -93,7 +93,7 @@ Para que un lote este disponible para venta, debe cumplir **todas** las siguient
 | Condicion | Descripcion |
 |-----------|-------------|
 | **Activo** | El lote debe estar activo (no eliminado) |
-| **Dictamen LIBERADO** | El lote debe haber sido liberado (CU21) |
+| **Dictamen LIBERADO** | El lote debe haber sido liberado (CU22) |
 | **Estado NO RECALL** | El lote no puede estar en proceso de recall |
 | **Tipo Unidad de Venta** | Solo productos terminados pueden venderse |
 | **Con stock** | Debe tener al menos un bulto con cantidad actual > 0 |
@@ -115,7 +115,7 @@ Para que un lote este disponible para venta, debe cumplir **todas** las siguient
 |------------------------|----------------|--------|
 | RECIBIDO | NO | Requiere pasar por analisis y liberacion |
 | CUARENTENA | NO | Requiere pasar por analisis y liberacion |
-| APROBADO | NO | Requiere liberacion (CU21) |
+| APROBADO | NO | Requiere liberacion (CU22) |
 | RECHAZADO | NO | Lote rechazado no puede venderse |
 | LIBERADO | SI | Estado correcto para venta |
 | DEVUELTO | NO | Fue devuelto |
@@ -124,11 +124,11 @@ Para que un lote este disponible para venta, debe cumplir **todas** las siguient
 ### 3.4 Flujo Previo Requerido
 
 ```
-CU21 (Confirmar Lote Liberado)
+CU22 (Confirmar Lote Liberado)
          |
          | dictamen: LIBERADO
          v
-CU22 (Venta Producto)
+CU23 (Venta Producto)
          |
          v
     [Lote Disponible para venta]
@@ -258,7 +258,7 @@ El sistema selecciona automaticamente las primeras trazas disponibles de cada bu
 | Unidad de Medida | UNIDAD |
 | Usuario | Usuario que realizo la operacion |
 | Fecha | Fecha de venta indicada |
-| Motivo del cambio | "[CU22] " + Motivo del cambio ingresado |
+| Motivo del cambio | "[CU23] " + Motivo del cambio ingresado |
 | Activo | SI |
 
 ### 6.5 Detalles del Movimiento
@@ -327,14 +327,14 @@ Opciones: "Registrar otra venta" o "Ir al inicio"
 
 ## 8. Operaciones Posteriores
 
-### 8.1 Despues de CU22
+### 8.1 Despues de CU23
 
 | CU | Nombre | Cuando Aplicar |
 |----|--------|----------------|
-| CU22 | Venta adicional | Si quedan unidades del lote para vender |
-| CU23 | Devolucion Venta | Si el cliente devuelve producto |
-| CU26 | Reverso | Si la venta fue incorrecta |
-| CU27 | Trazado | Para consultar trazabilidad del lote vendido |
+| CU23 | Venta adicional | Si quedan unidades del lote para vender |
+| CU24 | Devolucion Venta | Si el cliente devuelve producto |
+| CU31 | Reverso | Si la venta fue incorrecta |
+| CU21 | Trazado | Para consultar trazabilidad del lote vendido |
 
 ### 8.2 Flujo Tipico Completo de Unidad de Venta
 
@@ -351,14 +351,14 @@ CU3: Muestreo (muestra para analisis)
 CU5: Resultado APROBADO
          |
          v
-CU21: Confirmar Lote LIBERADO
+CU22: Confirmar Lote LIBERADO
          |
          v
-CU22: Venta del Producto  ◄── [Este CU]
+CU23: Venta del Producto  ◄── [Este CU]
          |
          +───> Mas ventas del mismo lote (si queda stock)
          |
-         +───> CU23: Si hay devolucion del cliente
+         +───> CU24: Si hay devolucion del cliente
          |
          v
     [FIN - Producto vendido al cliente]
@@ -506,7 +506,7 @@ CU22: Venta del Producto  ◄── [Este CU]
 ### 10.1 Sobre el Proceso
 
 **P: ¿Puedo vender un lote que no esta liberado?**
-R: No. Solo los lotes con dictamen LIBERADO aparecen disponibles para venta. Debe primero ejecutar CU21 (Confirmar Lote Liberado).
+R: No. Solo los lotes con dictamen LIBERADO aparecen disponibles para venta. Debe primero ejecutar CU22 (Confirmar Lote Liberado).
 
 **P: ¿Puedo vender de varios bultos a la vez?**
 R: Si. El formulario muestra todos los bultos con stock disponible y permite distribuir la venta entre ellos segun necesidad.
@@ -547,10 +547,10 @@ R: Si. Es fundamental para mantener la trazabilidad. Las unidades fisicas deben 
 ### 10.5 Sobre Errores
 
 **P: ¿Que hago si registre mal la cantidad vendida?**
-R: Use CU26 (Reverso) para anular la venta y luego registrela nuevamente con los datos correctos.
+R: Use CU31 (Reverso) para anular la venta y luego registrela nuevamente con los datos correctos.
 
 **P: ¿Que hago si vendi del lote incorrecto?**
-R: Use CU26 (Reverso) para anular la operacion completa y repita con el lote correcto.
+R: Use CU31 (Reverso) para anular la operacion completa y repita con el lote correcto.
 
 **P: ¿Por que no veo un lote que deberia estar disponible?**
 R: Verificar que el lote:
@@ -578,21 +578,21 @@ R: Verificar que el lote:
 
 ## Relacion con Otros CUs
 
-### Operaciones Previas (que habilitan CU22)
+### Operaciones Previas (que habilitan CU23)
 
 | CU | Nombre | Resultado que Habilita |
 |----|--------|------------------------|
-| CU21 | Confirmar Lote Liberado | Lote con dictamen LIBERADO |
+| CU22 | Confirmar Lote Liberado | Lote con dictamen LIBERADO |
 
-### Operaciones Siguientes (despues de CU22)
+### Operaciones Siguientes (despues de CU23)
 
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
-| CU22 | Venta adicional | Lote aun tiene stock |
-| CU23 | Devolucion Venta | Cliente devuelve producto vendido |
-| CU26 | Reverso | Si se necesita anular la venta |
-| CU27 | Trazado | Consulta de trazabilidad del lote |
+| CU23 | Venta adicional | Lote aun tiene stock |
+| CU24 | Devolucion Venta | Cliente devuelve producto vendido |
+| CU31 | Reverso | Si se necesita anular la venta |
+| CU21 | Trazado | Consulta de trazabilidad del lote |
 
 ---
 
-**Fin del Documento - CU22_VENTA_PRODUCTO v1.1 - Especificacion Funcional**
+**Fin del Documento - CU23_VENTA_PRODUCTO v1.1 - Especificacion Funcional**

@@ -46,7 +46,7 @@ El vencimiento de lote:
 | Recuperable | SI (nuevo analisis via CU2) | **NO (terminal)** |
 | Producto utilizable | NO (hasta nuevo analisis) | **NO (nunca mas)** |
 | Cancela analisis en curso | NO | **SI** |
-| Accion requerida | Nuevo analisis | Destruccion (CU25) |
+| Accion requerida | Nuevo analisis | Destruccion (CU30) |
 
 ### 1.4 Resultado del CU
 
@@ -55,7 +55,7 @@ Al detectar lotes vencidos:
 - Si hay **analisis en curso**, se cancela (dictamen = CANCELADO)
 - Se registra un **movimiento de MODIFICACION** con motivo VENCIMIENTO
 - El lote queda **permanentemente bloqueado**
-- Solo se puede ejecutar **CU25 (Ajuste Stock)** para registrar destruccion
+- Solo se puede ejecutar **CU30 (Ajuste Stock)** para registrar destruccion
 
 ---
 
@@ -160,7 +160,7 @@ Si el lote tiene un analisis en curso (sin dictamen), este se cancela:
 |--------|-------------|
 | Bloqueo total | El lote no puede usarse para NINGUNA operacion |
 | No recuperable | No existe forma de "desvenzer" un producto |
-| Requiere destruccion | Solo CU25 (Ajuste Stock) para registrar destruccion |
+| Requiere destruccion | Solo CU30 (Ajuste Stock) para registrar destruccion |
 | Analisis cancelado | Cualquier analisis en curso queda CANCELADO |
 
 ---
@@ -230,7 +230,7 @@ Para un lote VENCIDO, **solo una operacion** esta permitida:
 
 | CU | Nombre | Proposito |
 |----|--------|-----------|
-| CU25 | Ajuste Stock | Registrar destruccion/descarte del producto |
+| CU30 | Ajuste Stock | Registrar destruccion/descarte del producto |
 
 ### 6.2 Procedimiento de Destruccion
 
@@ -241,7 +241,7 @@ Para un lote VENCIDO, **solo una operacion** esta permitida:
 [Coordinar destruccion fisica]
        |
        v
-[CU25: Ajuste Stock]
+[CU30: Ajuste Stock]
   - Cantidad a ajustar: toda la existencia
   - Motivo: "Destruccion por vencimiento - Lote {codigo}"
        |
@@ -292,10 +292,10 @@ El sistema cumple con esto mediante:
 |-------|-------|
 | Dictamen | VENCIDO |
 | Movimiento | "CU10 - VENCIMIENTO AUTOMATICO POR FECHA: 06/12/2025" |
-| Operaciones permitidas | Solo CU25 (Ajuste) |
+| Operaciones permitidas | Solo CU30 (Ajuste) |
 
 **Accion requerida:**
-- Supervisor ejecuta CU25 con motivo "Destruccion por vencimiento"
+- Supervisor ejecuta CU30 con motivo "Destruccion por vencimiento"
 - Se registra acta de destruccion
 
 ### 7.2 Lote en Cuarentena con Analisis en Curso que Vence
@@ -372,10 +372,10 @@ R: Porque no tiene sentido analizar un producto que ya no puede usarse. El anali
 ### 8.2 Sobre los Lotes
 
 **P: ¿Que pasa con el stock?**
-R: El stock permanece registrado, pero el lote esta bloqueado. Debe ejecutarse CU25 para dar de baja el stock.
+R: El stock permanece registrado, pero el lote esta bloqueado. Debe ejecutarse CU30 para dar de baja el stock.
 
 **P: ¿Puedo vender un producto vencido?**
-R: **NO.** El sistema bloquea absolutamente todas las operaciones excepto CU25 (Ajuste).
+R: **NO.** El sistema bloquea absolutamente todas las operaciones excepto CU30 (Ajuste).
 
 **P: ¿Las trazas se pierden?**
 R: No. Las trazas permanecen asociadas al lote para trazabilidad historica.
@@ -383,7 +383,7 @@ R: No. Las trazas permanecen asociadas al lote para trazabilidad historica.
 ### 8.3 Sobre Destruccion
 
 **P: ¿Como registro la destruccion?**
-R: Usando CU25 (Ajuste Stock). Documente el motivo como "Destruccion por vencimiento" y adjunte referencia al acta de destruccion.
+R: Usando CU30 (Ajuste Stock). Documente el motivo como "Destruccion por vencimiento" y adjunte referencia al acta de destruccion.
 
 **P: ¿Es obligatorio destruir el producto?**
 R: Segun normativa ANMAT, los productos vencidos deben destruirse de forma documentada. El sistema no permite ninguna otra operacion.
@@ -410,7 +410,7 @@ R: VENCIDO es terminal y definitivo. ANALISIS_EXPIRADO se puede recuperar con nu
 8. **Recuperable:** **NO** (estado terminal)
 9. **Reversible:** **NO** (no existe reverso para CU10)
 10. **Cancela analisis en curso:** SI (dictamen = CANCELADO)
-11. **Unica operacion permitida:** CU25 (Ajuste Stock para destruccion)
+11. **Unica operacion permitida:** CU30 (Ajuste Stock para destruccion)
 
 ---
 
@@ -421,14 +421,14 @@ R: VENCIDO es terminal y definitivo. ANALISIS_EXPIRADO se puede recuperar con nu
 | CU | Nombre | Situacion |
 |----|--------|-----------|
 | CU5 | Resultado Aprobado | Lote aprobado con fecha vencimiento definida |
-| CU21 | Confirmar Liberado | Lote liberado con fecha vencimiento |
+| CU22 | Confirmar Liberado | Lote liberado con fecha vencimiento |
 | CU9 | Analisis Expirado | Lote ya tenia reanalisis vencido |
 
 ### Unica Operacion Permitida despues de CU10
 
 | CU | Nombre | Proposito |
 |----|--------|-----------|
-| CU25 | Ajuste Stock | Registrar destruccion del producto vencido |
+| CU30 | Ajuste Stock | Registrar destruccion del producto vencido |
 
 ### Operaciones BLOQUEADAS por CU10
 
@@ -438,9 +438,9 @@ R: VENCIDO es terminal y definitivo. ANALISIS_EXPIRADO se puede recuperar con nu
 | CU3 | Muestreo | No tiene sentido muestrear vencido |
 | CU5 | Resultado Analisis | No aplica |
 | CU7 | Consumo Produccion | Prohibido usar en produccion |
-| CU21 | Confirmar Liberado | No aplica |
-| CU22 | Venta Producto | Prohibido vender producto vencido |
-| CU26 | Reverso | No existe reverso para vencimiento |
+| CU22 | Confirmar Liberado | No aplica |
+| CU23 | Venta Producto | Prohibido vender producto vencido |
+| CU31 | Reverso | No existe reverso para vencimiento |
 
 ---
 

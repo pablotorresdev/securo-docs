@@ -92,8 +92,8 @@ Para que un lote aparezca en la lista de seleccion, debe cumplir:
 | RECIBIDO | CU1 (Compra) o CU20 (Produccion) | Lote nuevo sin analizar |
 | APROBADO | CU5 (Resultado) | Re-analisis de lote aprobado |
 | ANALISIS_EXPIRADO | CU9 (Automatico) | Lote cuyo analisis expiro |
-| LIBERADO | CU21 (Liberacion) | Lote liberado que requiere nuevo analisis |
-| DEVOLUCION_CLIENTES | CU23 (Devolucion) | Lote devuelto a analizar |
+| LIBERADO | CU22 (Liberacion) | Lote liberado que requiere nuevo analisis |
+| DEVOLUCION_CLIENTES | CU24 (Devolucion) | Lote devuelto a analizar |
 
 ### 3.3 Estados Permitidos para Entrada
 
@@ -307,7 +307,7 @@ Produccion  Devolucion
 |----|--------|----------------|---------|
 | CU3 | Muestreo | Siempre - tomar muestra para analisis | Analista Control Calidad |
 | CU11 | Anulacion Analisis | Si el analisis debe cancelarse | Gerente Control Calidad |
-| CU26 | Reverso Movimiento | Si se asigno por error | Usuario que hizo la operacion |
+| CU31 | Reverso Movimiento | Si se asigno por error | Usuario que hizo la operacion |
 
 ### 8.3 Operaciones NO Posibles Mientras en Cuarentena
 
@@ -315,8 +315,8 @@ Produccion  Devolucion
 |----|--------|------------|
 | CU5/CU6 | Resultado Analisis | Requiere primero CU3 (muestreo) |
 | CU7 | Consumo Produccion | Solo lotes APROBADOS |
-| CU21 | Liberacion | Solo lotes APROBADOS de Unidad de Venta |
-| CU22 | Venta | Solo lotes LIBERADOS |
+| CU22 | Liberacion | Solo lotes APROBADOS de Unidad de Venta |
+| CU23 | Venta | Solo lotes LIBERADOS |
 
 ---
 
@@ -376,7 +376,7 @@ Produccion  Devolucion
 
 ### 9.3 Caso Lote Devuelto: Devolucion de Cliente
 
-**Situacion:** Se recibio una devolucion de cliente (CU23) y debe analizarse el lote devuelto.
+**Situacion:** Se recibio una devolucion de cliente (CU24) y debe analizarse el lote devuelto.
 
 **Lote seleccionado:**
 | Campo | Valor |
@@ -457,10 +457,10 @@ R: Si. Los lotes se ordenan por fecha de ingreso (mas antiguos primero), luego p
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si asigne el numero de analisis incorrecto?**
-R: Puede usar CU26 (Reverso Movimiento) para anular la operacion y luego repetir CU2 con el numero correcto.
+R: Puede usar CU31 (Reverso Movimiento) para anular la operacion y luego repetir CU2 con el numero correcto.
 
 **P: ¿Que hago si seleccione el lote incorrecto?**
-R: Si aun no confirmo, puede volver a editar. Si ya confirmo, use CU26 (Reverso Movimiento).
+R: Si aun no confirmo, puede volver a editar. Si ya confirmo, use CU31 (Reverso Movimiento).
 
 ---
 
@@ -487,7 +487,7 @@ R: Si aun no confirmo, puede volver a editar. Si ya confirmo, use CU26 (Reverso 
 | CU20 | Alta Ingreso Produccion | RECIBIDO |
 | CU5 | Resultado Aprobado | APROBADO (para re-analisis) |
 | CU9 | Expiracion Analisis (automatico) | ANALISIS_EXPIRADO |
-| CU23 | Devolucion de Cliente | DEVOLUCION_CLIENTES |
+| CU24 | Devolucion de Cliente | DEVOLUCION_CLIENTES |
 
 ### Operaciones Siguientes (despues de CU2)
 
@@ -495,7 +495,7 @@ R: Si aun no confirmo, puede volver a editar. Si ya confirmo, use CU26 (Reverso 
 |----|--------|---------------|
 | CU3 | Muestreo | Lote en CUARENTENA |
 | CU11 | Anulacion Analisis | Lote en CUARENTENA con analisis |
-| CU26 | Reverso Movimiento | Ultimo movimiento fue CU2 |
+| CU31 | Reverso Movimiento | Ultimo movimiento fue CU2 |
 
 ---
 

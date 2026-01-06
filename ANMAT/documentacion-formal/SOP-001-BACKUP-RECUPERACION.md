@@ -4,10 +4,10 @@
 ---
 
 **Codigo documento:** SOP-001
-**Version:** 1.0
-**Fecha:** 2025-12-16
+**Version:** 1.1
+**Fecha:** 2026-01-06
 **Estado:** Aprobado
-**Fecha proxima revision:** 2026-12-16
+**Fecha proxima revision:** 2027-01-06
 
 ---
 
@@ -16,6 +16,7 @@
 | Version | Fecha | Autor | Descripcion |
 |---------|-------|-------|-------------|
 | 1.0 | 2025-12-16 | Equipo IT | Version inicial aprobada |
+| 1.1 | 2026-01-06 | Equipo IT | Actualizar tablas Envers, sincronizar con GitHub Actions + R2 |
 
 ---
 
@@ -64,15 +65,18 @@ Este procedimiento aplica a:
 - Personal de IT responsable de administracion del sistema
 
 **Datos incluidos en backup:**
-- Tabla `lote` - Lotes de productos
-- Tabla `movimiento` - Movimientos de stock
+- Tabla `lotes` - Lotes de productos
+- Tabla `movimientos` - Movimientos de stock
 - Tabla `analisis` - Resultados de analisis
-- Tabla `traza` - Registros de trazabilidad
-- Tabla `bulto` - Bultos/paquetes
-- Tabla `auditoria_cambios` - Audit trail de cambios
-- Tabla `auditoria_acceso` - Accesos de auditores
-- Tablas maestras: `producto`, `proveedor`, `fabricante`, `users`, `roles`
+- Tabla `trazas` - Registros de trazabilidad
+- Tabla `bultos` - Bultos/paquetes
+- Tabla `detalle_movimientos` - Detalles por bulto de cada movimiento
+- Tabla `auditoria_accesos` - Accesos de auditores
+- Tablas maestras: `productos`, `proveedores`, `users`, `roles`
 - Tabla `configuracion` - Configuracion del sistema
+- Tabla `alertas` - Alertas del sistema
+- Tabla `password_history` - Historial de contraseñas (ANMAT Req. 12)
+- Tablas Hibernate Envers (audit trail): `revinfo`, `lotes_aud`, `movimientos_aud`, `bultos_aud`, `analisis_aud`, `trazas_aud`, `productos_aud`, `proveedores_aud`, `users_aud`, `roles_aud`, `configuracion_aud`, `alertas_aud`
 
 ---
 
@@ -107,18 +111,20 @@ Este procedimiento aplica a:
 
 | Tipo de Backup | Frecuencia | Retencion | RPO Resultante |
 |----------------|------------|-----------|----------------|
-| **Automatico (Produccion)** | Semanal (Domingos 02:00) | 30 dias | 7 dias maximo |
+| **Automatico (Produccion)** | Semanal (Domingos 03:00 UTC) | 26 backups (~180 dias) | 7 dias maximo |
 | **Manual (Pre-cambios)** | Antes de actualizaciones/migraciones | 90 dias | Inmediato |
 | **Adicional Cloud** | Segun proveedor (ver Seccion 10) | Segun plan | Variable |
+
+> **Nota:** Los backups automaticos se ejecutan via GitHub Actions y se almacenan en CloudFlare R2.
 
 ### 5.2 Ubicacion de Almacenamiento
 
 | Ambiente | Ubicacion Principal | Ubicacion Secundaria |
 |----------|--------------------|--------------------|
+| **Produccion (Railway)** | CloudFlare R2 (`conitrack-backups`) | Railway Backups (automatico) |
 | Docker Local/VPS | `/opt/securo/backups/` | Almacenamiento externo (USB/NAS) |
-| Heroku | Heroku PG Backups (automatico) | Descarga local mensual |
-| Render | Render Backups (automatico) | Descarga local mensual |
-| Railway | Railway Backups (automatico) | Descarga local mensual |
+
+> **Referencia tecnica:** Ver `BACKUP-RESTORE-GUIDE.md` para instrucciones detalladas de restore.
 
 ### 5.3 Objetivos de Recuperacion
 
@@ -129,9 +135,9 @@ Este procedimiento aplica a:
 
 ### 5.4 Nomenclatura de Archivos
 
-Formato estandar: `conitrack_YYYYMMDD_HHMMSS.sql.gz`
+Formato estandar: `backup_YYYY-MM-DD_HH-MM-SS.sql.gz`
 
-Ejemplo: `conitrack_20251216_020000.sql.gz`
+Ejemplo: `backup_2026-01-06_03-00-00.sql.gz`
 
 ---
 

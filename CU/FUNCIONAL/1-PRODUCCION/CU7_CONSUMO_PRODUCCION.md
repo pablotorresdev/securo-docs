@@ -1,7 +1,7 @@
 # CU7 - CONSUMO PRODUCCION: Especificacion Funcional
 
-**Version:** 1.0
-**Fecha:** 2025-12-06
+**Version:** 1.1
+**Fecha:** 2025-12-26
 **Sistema:** CONITRACK - Gestion de Stock Farmaceutico
 **Tipo Operacion:** BAJA
 **Motivo:** CONSUMO_PRODUCCION
@@ -38,9 +38,9 @@ Usar CU7 cuando:
 
 **NO usar CU7 cuando:**
 - El lote no esta aprobado → debe pasar primero por **CU5 (Resultado Aprobado)**
-- El producto es una Unidad de Venta → estas se venden con **CU22**, no se consumen en produccion
+- El producto es una Unidad de Venta → estas se venden con **CU23**, no se consumen en produccion
 - Se quiere muestrear para analisis → usar **CU3 (Muestreo)**
-- Se quiere ajustar stock sin produccion real → usar **CU25 (Ajuste Stock)**
+- Se quiere ajustar stock sin produccion real → usar **CU30 (Ajuste Stock)**
 
 ### 1.3 Resultado del CU
 
@@ -190,7 +190,7 @@ Para cada bulto se muestra una tarjeta con:
 
 | Validacion | Mensaje de Error |
 |------------|------------------|
-| La fecha de consumo debe ser igual o posterior a la fecha de ingreso del lote | "La fecha de egreso no puede ser anterior a la fecha de ingreso del lote" |
+| La fecha de consumo debe ser igual o posterior a la fecha de ingreso del lote | "La fecha del movimiento no puede ser anterior a la fecha de ingreso del lote" |
 
 ### 5.3 Validaciones de Cantidades
 
@@ -263,19 +263,38 @@ Si el lote queda con cantidad = 0 y tenia un **analisis sin dictaminar** (en cur
 [Menu Principal]
       |
       v
-[Formulario Consumo Produccion] ────────────────┐
+[1. Formulario Consumo Produccion] ─────────────┐
       |                                          |
       | (Seleccionar lote, indicar cantidades)   | (Cancelar)
-      |                                          |
+      | [Vista Previa]                           |
       v                                          v
-[Pantalla de Exito] ◄────────────────────── [Menu Principal]
-      |
+[2. Pantalla de Confirmacion] ◄───────────  [Menu Principal]
+      |                    |
+      | [Confirmar         | [Volver a Editar]
+      |  y Guardar]        |
+      v                    v
+[3. Pantalla de Exito]    [1. Formulario]
+      |                    (datos preservados)
       | (Nuevo Consumo) o (Ir a Inicio)
       v
 [Formulario Consumo] o [Menu Principal]
 ```
 
-### 7.2 Pantalla de Exito
+### 7.2 Pantalla de Confirmacion
+
+Muestra un resumen de todos los datos antes de guardar:
+
+| Seccion | Contenido |
+|---------|-----------|
+| Datos del Lote | Codigo interno, producto, stock disponible |
+| Datos del Consumo | Fecha, orden de produccion, motivo del cambio |
+| Cantidades por Bulto | Tabla con cada bulto y la cantidad a consumir |
+
+**Acciones disponibles:**
+- **Volver a Editar**: Regresa al formulario con todos los datos preservados
+- **Confirmar y Guardar**: Persiste el consumo en la base de datos
+
+### 7.3 Pantalla de Exito
 
 Muestra:
 - Mensaje: "Consumo registrado correctamente para la orden {OP}"
@@ -294,7 +313,7 @@ Muestra:
 |----|--------|----------------|
 | CU7 | Consumo adicional | Si se requiere mas material del mismo lote |
 | CU20 | Ingreso Produccion | Para registrar el producto fabricado |
-| CU26 | Reverso | Si el consumo fue incorrecto |
+| CU31 | Reverso | Si el consumo fue incorrecto |
 
 ### 8.2 Flujo Tipico de Produccion
 
@@ -490,7 +509,7 @@ R: El bulto cambia a estado CONSUMIDO y ya no estara disponible para futuras ope
 ### 10.3 Sobre Tipos de Producto
 
 **P: ¿Por que no puedo consumir Unidades de Venta?**
-R: Las Unidades de Venta son productos terminados que se venden, no se consumen en produccion. Use CU22 (Venta) para registrar salidas de UV.
+R: Las Unidades de Venta son productos terminados que se venden, no se consumen en produccion. Use CU23 (Venta) para registrar salidas de UV.
 
 **P: ¿Puedo consumir Semielaborados?**
 R: Si. Los semielaborados pueden usarse como insumo para fabricar otros productos.
@@ -498,10 +517,10 @@ R: Si. Los semielaborados pueden usarse como insumo para fabricar otros producto
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si registre mal la cantidad consumida?**
-R: Use CU26 (Reverso) para anular el consumo y luego registrelo nuevamente con los datos correctos.
+R: Use CU31 (Reverso) para anular el consumo y luego registrelo nuevamente con los datos correctos.
 
 **P: ¿Que hago si seleccione el lote incorrecto?**
-R: Use CU26 (Reverso) para anular la operacion completa y repita con el lote correcto.
+R: Use CU31 (Reverso) para anular la operacion completa y repita con el lote correcto.
 
 **P: ¿Por que no veo un lote que deberia estar disponible?**
 R: Verificar que el lote:
@@ -522,6 +541,7 @@ R: Verificar que el lote:
 6. **Campo adicional:** Orden de Produccion (para trazabilidad)
 7. **Campo critico:** Motivo del cambio (mínimo 20 caracteres)
 8. **Restriccion importante:** Solo lotes APROBADOS y con stock disponible
+9. **Flujo:** 3 pasos (formulario -> confirmacion -> exito) con vista previa obligatoria
 
 ---
 
@@ -539,8 +559,17 @@ R: Verificar que el lote:
 |----|--------|---------------|
 | CU7 | Consumo adicional | Lote aun tiene stock |
 | CU20 | Ingreso Produccion | Producto fabricado listo para ingresar |
-| CU26 | Reverso | Si se necesita anular el consumo |
+| CU31 | Reverso | Si se necesita anular el consumo |
 
 ---
 
-**Fin del Documento - CU7_CONSUMO_PRODUCCION v1.0 - Especificacion Funcional**
+## Historial de Cambios
+
+| Version | Fecha | Cambios |
+|---------|-------|---------|
+| 1.1 | 2025-12-26 | Agregada pantalla de confirmacion intermedia. Flujo actualizado de 2 a 3 pasos. |
+| 1.0 | 2025-12-06 | Version inicial del documento funcional |
+
+---
+
+**Fin del Documento - CU7_CONSUMO_PRODUCCION v1.1 - Especificacion Funcional**

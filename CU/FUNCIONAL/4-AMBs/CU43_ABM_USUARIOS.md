@@ -152,7 +152,7 @@ La gestion de usuarios es **critica** porque:
 |-------------|--------|
 | Solo lectura | No puede ejecutar ningun CU que modifique datos |
 | Accesos logueados | Todos sus accesos se registran en BD y archivo |
-| Sin reverso | No puede ejecutar CU26 (Reverso) |
+| Sin reverso | No puede ejecutar CU31 (Reverso) |
 | Reportes | Si puede acceder a reportes |
 
 ---
@@ -511,7 +511,7 @@ R: Ambos pueden liberar lotes. DT tiene nivel superior en jerarquia de reversos.
 | CU | Uso del Usuario |
 |----|-----------------|
 | Todos | Cada movimiento registra el usuario que lo ejecuto |
-| CU26 | Verifica jerarquia para autorizar reverso |
+| CU31 | Verifica jerarquia para autorizar reverso |
 | CU9/CU10 | Usa usuario especial "system_auto" |
 
 ### Documentacion Relacionada

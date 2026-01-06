@@ -1,4 +1,4 @@
-# CU21 - CONFIRMAR LOTE LIBERADO: Especificacion Funcional
+# CU22 - CONFIRMAR LOTE LIBERADO: Especificacion Funcional
 
 **Version:** 1.0
 **Fecha:** 2025-12-06
@@ -39,16 +39,16 @@ La "liberacion" de un lote farmaceutico es la autorizacion final que permite su 
 - Revision del expediente del lote por parte del DT
 - Verificacion de toda la documentacion de fabricacion y analisis
 - Firma de la documentacion de liberacion
-- Una vez completado, se confirma en el sistema mediante CU21
+- Una vez completado, se confirma en el sistema mediante CU22
 
 ### 1.3 Cuando Usar Este CU
 
-Usar CU21 cuando:
+Usar CU22 cuando:
 - El DT ha completado el proceso de liberacion del lote
 - Toda la documentacion de liberacion esta firmada
 - El lote esta listo para ser vendido
 
-**NO usar CU21 cuando:**
+**NO usar CU22 cuando:**
 - El lote aun no fue aprobado por Control de Calidad → usar primero **CU5 (Resultado Aprobado)**
 - El lote no es de tipo Unidad de Venta → no requiere liberacion
 - El lote ya fue liberado → ya tiene dictamen LIBERADO
@@ -59,7 +59,7 @@ Al completar exitosamente:
 - El dictamen del lote cambia de **APROBADO** a **LIBERADO**
 - Se asigna la **fecha de vencimiento** del analisis al lote
 - Se registra un **movimiento de MODIFICACION** con motivo LOTE_LIBERADO
-- El lote queda habilitado para **venta** (CU22)
+- El lote queda habilitado para **venta** (CU23)
 
 ---
 
@@ -202,7 +202,7 @@ El formulario incluye un aviso destacado:
 | Dictamen Final | LIBERADO |
 | Usuario | Usuario que realizo la operacion |
 | Fecha | Fecha de confirmacion indicada |
-| Motivo del cambio | "[CU21] " + Motivo del cambio ingresado |
+| Motivo del cambio | "[CU22] " + Motivo del cambio ingresado |
 | Activo | SI |
 
 ---
@@ -239,13 +239,13 @@ Muestra:
 
 ## 8. Operaciones Posteriores
 
-### 8.1 Despues de CU21
+### 8.1 Despues de CU22
 
 | CU | Nombre | Descripcion |
 |----|--------|-------------|
-| CU22 | Venta Producto | Registrar venta del lote liberado |
-| CU27 | Trazado | Consultar/gestionar trazas del lote |
-| CU26 | Reverso | Si la confirmacion fue incorrecta |
+| CU23 | Venta Producto | Registrar venta del lote liberado |
+| CU21 | Trazado | Consultar/gestionar trazas del lote |
+| CU31 | Reverso | Si la confirmacion fue incorrecta |
 
 ### 8.2 Flujo Completo de Unidad de Venta
 
@@ -262,20 +262,20 @@ CU3: Muestreo (muestra para analisis)
 CU5: Resultado APROBADO
          |
          v
-CU21: Confirmar Lote LIBERADO  ◄── [Este CU]
+CU22: Confirmar Lote LIBERADO  ◄── [Este CU]
          |
          v
-CU22: Venta del Producto
+CU23: Venta del Producto
          |
          v
     [FIN - Producto vendido]
 ```
 
-### 8.3 Operaciones NO Posibles Antes de CU21
+### 8.3 Operaciones NO Posibles Antes de CU22
 
 | CU | Nombre | Por Que No |
 |----|--------|------------|
-| CU22 | Venta Producto | Requiere dictamen LIBERADO |
+| CU23 | Venta Producto | Requiere dictamen LIBERADO |
 
 ---
 
@@ -304,8 +304,8 @@ CU22: Venta del Producto
 **Resultado:**
 - Lote: Dictamen cambia de APROBADO a LIBERADO
 - Fecha vencimiento del lote: Tomada del analisis aprobado
-- Movimiento de MODIFICACION con "[CU21] Liberacion completada..."
-- Lote disponible para CU22 (Venta)
+- Movimiento de MODIFICACION con "[CU22] Liberacion completada..."
+- Lote disponible para CU23 (Venta)
 
 ### 9.2 Caso con Jarabe
 
@@ -394,7 +394,7 @@ R: Es el rango de numeros de traza (identificadores individuales) de las unidade
 ### 10.3 Sobre Errores
 
 **P: ¿Que hago si confirme por error?**
-R: Use CU26 (Reverso) para anular la confirmacion. El lote volvera a estado APROBADO.
+R: Use CU31 (Reverso) para anular la confirmacion. El lote volvera a estado APROBADO.
 
 **P: ¿Que hago si el lote no tiene fecha de vencimiento en el analisis?**
 R: Debe contactar a Control de Calidad para que completen los datos del analisis (CU5) con la fecha de vencimiento.
@@ -412,26 +412,26 @@ R: Debe contactar a Control de Calidad para que completen los datos del analisis
 7. **Tipo de movimiento:** MODIFICACION
 8. **Motivo del movimiento:** LOTE_LIBERADO
 9. **Campo critico:** Motivo del cambio (mínimo 20 caracteres)
-10. **Habilita:** CU22 (Venta del Producto)
+10. **Habilita:** CU23 (Venta del Producto)
 
 ---
 
 ## Relacion con Otros CUs
 
-### Operaciones Previas (que habilitan CU21)
+### Operaciones Previas (que habilitan CU22)
 
 | CU | Nombre | Resultado que Habilita |
 |----|--------|------------------------|
 | CU5 | Resultado Aprobado | Lote con dictamen APROBADO |
 
-### Operaciones Siguientes (despues de CU21)
+### Operaciones Siguientes (despues de CU22)
 
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
-| CU22 | Venta Producto | Lote con dictamen LIBERADO |
-| CU27 | Trazado | Lote con trazas activas |
-| CU26 | Reverso | Si se necesita anular la confirmacion |
+| CU23 | Venta Producto | Lote con dictamen LIBERADO |
+| CU21 | Trazado | Lote con trazas activas |
+| CU31 | Reverso | Si se necesita anular la confirmacion |
 
 ---
 
-**Fin del Documento - CU21_CONFIRMAR_LOTE_LIBERADO v1.0 - Especificacion Funcional**
+**Fin del Documento - CU22_CONFIRMAR_LOTE_LIBERADO v1.0 - Especificacion Funcional**

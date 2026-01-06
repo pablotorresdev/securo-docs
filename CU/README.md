@@ -27,18 +27,18 @@
 | CU | Nombre | Tipo | Archivo |
 |----|--------|------|---------|
 | CU20 | Ingreso Produccion | ALTA | `CU20_INGRESO_PRODUCCION.md` |
-| CU21 | Confirmar Lote Liberado | MODIF | `CU21_CONFIRMAR_LOTE_LIBERADO.md` |
-| CU22 | Venta Producto | BAJA | `CU22_VENTA_PRODUCTO.md` |
-| CU23 | Devolucion Venta | ALTA | `CU23_DEVOLUCION_VENTA.md` |
-| CU24 | Retiro Mercado | ALTA+MODIF | `CU24_RETIRO_MERCADO.md` |
-| CU27 | Trazado Lote | MODIF | `CU27_TRAZADO_LOTE.md` |
+| CU22 | Confirmar Lote Liberado | MODIF | `CU22_CONFIRMAR_LOTE_LIBERADO.md` |
+| CU23 | Venta Producto | BAJA | `CU23_VENTA_PRODUCTO.md` |
+| CU24 | Devolucion Venta | ALTA | `CU24_DEVOLUCION_VENTA.md` |
+| CU25 | Retiro Mercado | ALTA+MODIF | `CU25_RETIRO_MERCADO.md` |
+| CU21 | Trazado Lote | MODIF | `CU21_TRAZADO_LOTE.md` |
 
 ### CONTINGENCIAS (raiz `/`)
 
 | CU | Nombre | Tipo | Archivo |
 |----|--------|------|---------|
-| CU25 | Ajuste Stock | BAJA | `CU25_AJUSTE_STOCK.md` |
-| CU26 | Reverso Movimiento | MODIF | `CU26_REVERSO_MOVIMIENTO.md` |
+| CU30 | Ajuste Stock | BAJA | `CU30_AJUSTE_STOCK.md` |
+| CU31 | Reverso Movimiento | MODIF | `CU31_REVERSO_MOVIMIENTO.md` |
 
 ### ABM MAESTROS (raiz `/`)
 
@@ -57,16 +57,16 @@
 Operaciones que incrementan stock o crean nuevos lotes.
 - CU1: Ingreso Compra
 - CU20: Ingreso Produccion
-- CU23: Devolucion Venta (crea nuevo lote)
-- CU24: Retiro Mercado (crea nuevo lote + modifica original)
+- CU24: Devolucion Venta (crea nuevo lote)
+- CU25: Retiro Mercado (crea nuevo lote + modifica original)
 
 ### BAJA (Egreso de Stock) - 5 CUs
 Operaciones que reducen stock existente.
 - CU3: Muestreo
 - CU4: Devolucion Compra
 - CU7: Consumo Produccion
-- CU22: Venta Producto
-- CU25: Ajuste Stock
+- CU23: Venta Producto
+- CU30: Ajuste Stock
 
 ### MODIFICACION (Cambio de Estado/Dictamen) - 7 CUs
 Operaciones que cambian estado o dictamen sin afectar cantidades.
@@ -74,9 +74,9 @@ Operaciones que cambian estado o dictamen sin afectar cantidades.
 - CU5/CU6: Resultado Analisis
 - CU8: Reanalisis Lote
 - CU11: Anulacion Analisis
-- CU21: Confirmar Lote Liberado
-- CU26: Reverso Movimiento
-- CU27: Trazado Lote
+- CU22: Confirmar Lote Liberado
+- CU31: Reverso Movimiento
+- CU21: Trazado Lote
 
 ### AUTOMATICOS (Scheduler) - 2 CUs
 Procesos batch ejecutados por el sistema.

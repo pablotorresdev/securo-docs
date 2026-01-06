@@ -52,7 +52,7 @@ Usar CU11 cuando:
 - La muestra fue contaminada o invalida
 
 **NO usar CU11 cuando:**
-- El analisis ya tiene resultado (APROBADO/RECHAZADO) → usar **CU26 (Reverso)**
+- El analisis ya tiene resultado (APROBADO/RECHAZADO) → usar **CU31 (Reverso)**
 - Se quiere registrar un resultado → usar **CU5/CU6 (Resultado Analisis)**
 - Se quiere iniciar un nuevo analisis → usar **CU2 (Cuarentena)** o **CU8 (Reanalisis)**
 
@@ -265,7 +265,7 @@ Opciones: "Realizar otra anulacion" o "Volver al inicio"
 |----|--------|----------------|
 | CU2 | Dictamen Cuarentena | Para asignar nuevo analisis al lote |
 | CU8 | Reanalisis | Si el lote estaba aprobado y requiere nuevo analisis |
-| CU26 | Reverso | Si la anulacion fue incorrecta |
+| CU31 | Reverso | Si la anulacion fue incorrecta |
 
 ### 8.2 Flujo Tipico de Anulacion
 
@@ -291,7 +291,7 @@ Analisis    Reanalisis
 
 ### 8.3 Diferencia con Reverso
 
-| Aspecto | Anulacion (CU11) | Reverso (CU26) |
+| Aspecto | Anulacion (CU11) | Reverso (CU31) |
 |---------|------------------|----------------|
 | Aplica a | Analisis en curso | Cualquier movimiento |
 | Dictamen del analisis | Solo sin dictamen | Con o sin dictamen |
@@ -376,7 +376,7 @@ Analisis    Reanalisis
 **Resultado:**
 - El analisis NO aparece en la lista de seleccion
 - Solo aparecen analisis sin dictamen (en curso)
-- Para revertir un analisis aprobado, usar CU26 (Reverso)
+- Para revertir un analisis aprobado, usar CU31 (Reverso)
 
 ### 9.5 Caso Error: Motivo Muy Corto
 
@@ -398,7 +398,7 @@ Analisis    Reanalisis
 ### 10.1 Sobre el Proceso
 
 **P: ¿Puedo anular un analisis que ya tiene resultado?**
-R: No. Solo se pueden anular analisis en curso (sin dictamen). Para revertir un analisis aprobado o rechazado, debe usar CU26 (Reverso).
+R: No. Solo se pueden anular analisis en curso (sin dictamen). Para revertir un analisis aprobado o rechazado, debe usar CU31 (Reverso).
 
 **P: ¿Que pasa con el lote cuando anulo el analisis?**
 R: El dictamen del lote se restaura al estado que tenia antes del analisis. Por ejemplo, si estaba RECIBIDO antes de entrar a cuarentena, vuelve a RECIBIDO.
@@ -423,7 +423,7 @@ R: No. Una vez anulado, el analisis ya tiene dictamen ANULADO y no aparece en la
 ### 10.3 Sobre Errores
 
 **P: ¿Que hago si anule el analisis incorrecto?**
-R: Use CU26 (Reverso) para revertir la operacion de anulacion.
+R: Use CU31 (Reverso) para revertir la operacion de anulacion.
 
 **P: ¿Puedo modificar el motivo de anulacion despues?**
 R: No. El motivo queda registrado en el movimiento y no puede modificarse.
@@ -460,7 +460,7 @@ R: No. El motivo queda registrado en el movimiento y no puede modificarse.
 |----|--------|---------------|
 | CU2 | Dictamen Cuarentena | Para asignar nuevo analisis |
 | CU8 | Reanalisis | Si el lote estaba aprobado |
-| CU26 | Reverso | Si se necesita revertir la anulacion |
+| CU31 | Reverso | Si se necesita revertir la anulacion |
 
 ---
 

@@ -34,7 +34,7 @@ El servicio `FechaValidatorService` implementa los procesos batch automaticos qu
 | **Frecuencia** | Diaria |
 | **Horario** | 05:00 AM |
 | **Usuario Sistema** | `system_auto` (rol ADMIN) |
-| **Orden de Ejecucion** | Primero CU9, luego CU10 |
+| **Orden de Ejecucion** | Primero CU10, luego CU9 |
 
 ### 1.3 Cron Expression
 
@@ -52,6 +52,7 @@ Un lote es procesado por CU9 cuando:
 - `fechaReanalisisVigente <= hoy`
 - Lote tiene stock > 0
 - Lote esta activo
+- Dictamen es uno de: CUARENTENA, APROBADO, RECIBIDO, LIBERADO, DEVOLUCION_CLIENTES
 
 ### 2.2 Postcondiciones
 
@@ -91,6 +92,7 @@ Un lote es procesado por CU10 cuando:
 - `fechaVencimientoVigente <= hoy`
 - Lote tiene stock > 0
 - Lote esta activo
+- Dictamen es uno de: CUARENTENA, APROBADO, RECIBIDO, LIBERADO, DEVOLUCION_CLIENTES, ANALISIS_EXPIRADO
 
 ### 3.2 Postcondiciones
 
@@ -104,7 +106,7 @@ Un lote es procesado por CU10 cuando:
 
 **NO es recuperable**. El estado VENCIDO es terminal.
 
-Unica operacion permitida: **CU25 (Ajuste Stock)** para registrar destruccion.
+Unica operacion permitida: **CU30 (Ajuste Stock)** para registrar destruccion.
 
 ### 3.4 Metodo Principal
 
@@ -130,11 +132,11 @@ El servicio crea automaticamente el usuario `system_auto` si no existe:
 
 ```java
 User getSystemUser() {
-    return userRepository.findByUsername("system_auto")
+    return userRepository.findByUsernameWithRole("system_auto")
         .orElseGet(() -> {
             Role adminRole = roleRepository.findByName(RoleEnum.ADMIN.name())
                 .orElseGet(() -> roleRepository.save(Role.fromEnum(RoleEnum.ADMIN)));
-            User systemUser = new User("system_auto", "N/A", adminRole);
+            User systemUser = new User("system_auto", "SYSTEM_NO_LOGIN", adminRole);
             return userRepository.save(systemUser);
         });
 }
@@ -144,10 +146,10 @@ User getSystemUser() {
 
 | CU | Formato Motivo del Cambio                          |
 |----|----------------------------------------------------|
-| CU9 | `[CU9](CU9) ANALISIS EXPIRADO POR FECHA: {fecha}`       |
-| CU10 | `[CU10](CU10) VENCIMIENTO AUTOMATICO POR FECHA: {fecha}` |
+| CU9 | `[CU9] (CU9) ANALISIS EXPIRADO POR FECHA: {fecha}`       |
+| CU10 | `[CU10] (CU10) VENCIMIENTO AUTOMATICO POR FECHA: {fecha}` |
 
-**Nota:** El prefijo `[CUx]` es agregado automaticamente por `formatMotivoDelCambioWithCU()`.
+**Nota:** El prefijo `[CUx]` es agregado automaticamente por `formatMotivoDelCambioWithCU()`. El mensaje base es `(CU9) ANALISIS EXPIRADO...` o `(CU10) VENCIMIENTO AUTOMATICO...`.
 
 ---
 
@@ -203,7 +205,7 @@ Cada lote procesado genera un movimiento con:
 
 ---
 
-## Restricciones de Reverso (CU26)
+## Restricciones de Reverso (CU31)
 
 | CU | Reversible | Motivo |
 |----|------------|--------|
@@ -211,8 +213,8 @@ Cada lote procesado genera un movimiento con:
 | CU10 | **NO** | Estado terminal irreversible |
 
 El servicio `ModifReversoMovimientoService` rechaza explicitamente reversos de estos motivos:
-- `VENCIMIENTO`: "No se puede reversar un vencimiento de lote (CU10). El vencimiento es un proceso automatico irreversible"
-- `EXPIRACION_ANALISIS`: "No se puede reversar una expiracion de analisis (CU9). La expiracion es un proceso automatico"
+- `VENCIMIENTO`: "No se puede reversar un vencimiento de lote (CU10). El vencimiento es un proceso automático irreversible."
+- `EXPIRACION_ANALISIS`: "No se puede reversar una expiración de análisis (CU9). La expiración es un proceso automático."
 
 ---
 

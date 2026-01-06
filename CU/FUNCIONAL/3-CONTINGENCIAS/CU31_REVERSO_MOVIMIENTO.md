@@ -1,4 +1,4 @@
-# CU26 - REVERSO DE MOVIMIENTO: Especificacion Funcional
+# CU31 - REVERSO DE MOVIMIENTO: Especificacion Funcional
 
 **Version:** 1.0
 **Fecha:** 2025-12-06
@@ -41,13 +41,13 @@ El reverso de movimiento:
 
 ### 1.3 Cuando Usar Este CU
 
-Usar CU26 cuando:
+Usar CU31 cuando:
 - Se registro un movimiento por error
 - Se necesita corregir una operacion incorrecta
 - Se detecto un error de datos posterior al registro
 
-**NO usar CU26 cuando:**
-- Se quiere ajustar stock → usar **CU25 (Ajuste Stock)**
+**NO usar CU31 cuando:**
+- Se quiere ajustar stock → usar **CU30 (Ajuste Stock)**
 - El movimiento es de vencimiento (CU10) → irreversible
 - El movimiento es de expiracion de analisis (CU9) → irreversible
 - El lote tiene un recall asociado (MODIFICACION con motivo RETIRO_MERCADO)
@@ -67,7 +67,7 @@ Al completar exitosamente:
 
 ### 2.1 Autorizacion por Jerarquia y Areas
 
-El CU26 tiene un sistema de autorizacion basado en **jerarquia de roles** y **areas funcionales**:
+El CU31 tiene un sistema de autorizacion basado en **jerarquia de roles** y **areas funcionales**:
 
 | Regla | Descripcion |
 |-------|-------------|
@@ -202,7 +202,7 @@ Al seleccionar un lote, se muestra automaticamente el ultimo movimiento:
 | # | Campo | Validacion | Mensaje de Error |
 |---|-------|------------|------------------|
 | 1 | Lote | Debe seleccionar uno | (validacion de formulario) |
-| 2 | Movimiento | Debe existir el movimiento | "El Movimmiento no existe." |
+| 2 | Movimiento | Debe existir el movimiento | "El Movimiento no existe." |
 | 3 | Movimiento | Debe ser unico | "Cantidad incorrecta de movimientos" |
 | 4 | Motivo del Cambio | Minimo 20 caracteres | "El motivo del cambio es obligatorio (mínimo 20 caracteres)" |
 
@@ -243,7 +243,7 @@ Al seleccionar un lote, se muestra automaticamente el ultimo movimiento:
 | Elemento | Efecto |
 |----------|--------|
 | Lote | Se elimina logicamente (si es CU1/CU20) |
-| Lote derivado | Se elimina logicamente (si es CU23/CU24) |
+| Lote derivado | Se elimina logicamente (si es CU24/CU25) |
 | Bultos | Se eliminan logicamente |
 | Trazas | Se eliminan logicamente o vuelven al lote original |
 | Cantidades | Se revierten |
@@ -335,8 +335,8 @@ Muestra:
 |----|--------|---------------------|--------|
 | CU1 | COMPRA | ReversoAltaService.reversarAltaIngresoCompra | Elimina lote creado |
 | CU20 | PRODUCCION_PROPIA | ReversoAltaService.reversarAltaIngresoProduccion | Elimina lote creado |
-| CU23 | DEVOLUCION_VENTA | ReversoAltaService.reversarAltaDevolucionVenta | Elimina lote derivado, restaura trazas |
-| CU24 | RETIRO_MERCADO (ALTA) | ReversoAltaService.reversarRetiroMercado | Elimina lote recall, restaura trazas |
+| CU24 | DEVOLUCION_VENTA | ReversoAltaService.reversarAltaDevolucionVenta | Elimina lote derivado, restaura trazas |
+| CU25 | RETIRO_MERCADO (ALTA) | ReversoAltaService.reversarRetiroMercado | Elimina lote recall, restaura trazas |
 
 ### 8.2 Movimientos de BAJA
 
@@ -345,8 +345,8 @@ Muestra:
 | CU3 | MUESTREO | ReversoBajaService.reversarBajaMuestreoBulto | Restaura cantidades muestreadas |
 | CU4 | DEVOLUCION_COMPRA | ReversoBajaService.reversarBajaDevolucionCompra | Restaura cantidades devueltas |
 | CU7 | CONSUMO_PRODUCCION | ReversoBajaService.reversarBajaConsumoProduccion | Restaura cantidades consumidas |
-| CU22 | VENTA | ReversoBajaService.reversarBajaVentaProducto | Restaura cantidades vendidas, trazas a DISPONIBLE |
-| CU25 | AJUSTE | ReversoBajaService.reversarBajaAjuste | Restaura cantidades ajustadas |
+| CU23 | VENTA | ReversoBajaService.reversarBajaVentaProducto | Restaura cantidades vendidas, trazas a DISPONIBLE |
+| CU30 | AJUSTE | ReversoBajaService.reversarBajaAjuste | Restaura cantidades ajustadas |
 
 ### 8.3 Movimientos de MODIFICACION
 
@@ -355,8 +355,8 @@ Muestra:
 | CU2/CU8 | ANALISIS | ReversoModificacionService.reversarModifDictamenCuarentena | Restaura dictamen anterior |
 | CU5/CU6 | RESULTADO_ANALISIS | ReversoModificacionService.reversarModifResultadoAnalisis | Restaura dictamen anterior del analisis |
 | CU11 | ANULACION_ANALISIS | ReversoModificacionService.reversarAnulacionAnalisis | Reactiva analisis anulado |
-| CU21 | LOTE_LIBERADO | ReversoModificacionService.reversarModifConfirmarLoteLiberado | Revierte liberacion |
-| CU27 | TRAZADO | ReversoModificacionService.reversarModifTrazadoLote | Revierte asignacion de trazas |
+| CU22 | LOTE_LIBERADO | ReversoModificacionService.reversarModifConfirmarLoteLiberado | Revierte liberacion |
+| CU21 | TRAZADO | ReversoModificacionService.reversarModifTrazadoLote | Revierte asignacion de trazas |
 
 ### 8.4 Movimientos NO Reversables
 
@@ -364,7 +364,7 @@ Muestra:
 |----|--------|-------|
 | CU9 | EXPIRACION_ANALISIS | Proceso automatico irreversible |
 | CU10 | VENCIMIENTO | Proceso automatico irreversible |
-| CU24 (MODIF) | RETIRO_MERCADO | Recall asociado al lote |
+| CU25 (MODIF) | RETIRO_MERCADO | Recall asociado al lote |
 
 ---
 
@@ -513,7 +513,7 @@ R: No esta soportado actualmente.
 
 ## Relacion con Otros CUs
 
-### Movimientos que CU26 Puede Reversar
+### Movimientos que CU31 Puede Reversar
 
 | CU | Tipo | Motivo |
 |----|------|--------|
@@ -525,21 +525,21 @@ R: No esta soportado actualmente.
 | CU7 | BAJA | CONSUMO_PRODUCCION |
 | CU11 | MODIFICACION | ANULACION_ANALISIS |
 | CU20 | ALTA | PRODUCCION_PROPIA |
-| CU21 | MODIFICACION | LOTE_LIBERADO |
-| CU22 | BAJA | VENTA |
-| CU23 | ALTA | DEVOLUCION_VENTA |
-| CU24 | ALTA | RETIRO_MERCADO |
-| CU25 | BAJA | AJUSTE |
-| CU27 | MODIFICACION | TRAZADO |
+| CU22 | MODIFICACION | LOTE_LIBERADO |
+| CU23 | BAJA | VENTA |
+| CU24 | ALTA | DEVOLUCION_VENTA |
+| CU25 | ALTA | RETIRO_MERCADO |
+| CU30 | BAJA | AJUSTE |
+| CU21 | MODIFICACION | TRAZADO |
 
-### Movimientos que CU26 NO Puede Reversar
+### Movimientos que CU31 NO Puede Reversar
 
 | CU | Motivo | Razon |
 |----|--------|-------|
 | CU9 | EXPIRACION_ANALISIS | Automatico |
 | CU10 | VENCIMIENTO | Automatico |
-| CU24 (MODIF) | RETIRO_MERCADO | Recall |
+| CU25 (MODIF) | RETIRO_MERCADO | Recall |
 
 ---
 
-**Fin del Documento - CU26_REVERSO_MOVIMIENTO v1.0 - Especificacion Funcional**
+**Fin del Documento - CU31_REVERSO_MOVIMIENTO v1.0 - Especificacion Funcional**

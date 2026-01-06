@@ -234,7 +234,7 @@ El metodo `validarIngresoCompraInput()` ejecuta las siguientes validaciones en o
 
 | Regla                                        | Mensaje de Error |
 |----------------------------------------------|------------------|
-| `motivoDelCambio` no nulo y >= 20 caracteres | "El campo motivo del cambio/observaciones es obligatorio (mínimo 20 caracteres)" |
+| `motivoDelCambio` no nulo y >= 20 caracteres | "El motivo del cambio es obligatorio (mínimo 20 caracteres)" |
 
 **2. validarCantidadIngreso**
 

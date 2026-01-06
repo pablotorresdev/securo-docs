@@ -45,13 +45,26 @@ Permite iniciar un nuevo analisis de control de calidad para un lote que ya fue 
 |  |  Numero de Reanalisis                                         |  |
 |  |  Motivo del cambio (min 20 chars)                             |  |
 |  +---------------------------------------------------------------+  |
-|  [Cancelar]                                   [Iniciar Reanalisis]   |
+|  [Cancelar]                                       [Vista Previa]     |
++---------------------------------------------------------------------+
+                              |
+                              | POST /calidad/reanalisis/inicio-reanalisis/confirm
+                              v
++---------------------------------------------------------------------+
+|  2. CONFIRMACION                                                     |
+|     Template: calidad/reanalisis/inicio-reanalisis-confirm.html     |
+|  +---------------------------------------------------------------+  |
+|  |  Vista previa de datos ingresados                             |  |
+|  |  Informacion completa del lote                                |  |
+|  |  Dictamen sin cambio (APROBADO -> APROBADO)                   |  |
+|  +---------------------------------------------------------------+  |
+|  [Volver a Editar]                    [Confirmar e Iniciar Reanalisis]|
 +---------------------------------------------------------------------+
                               |
                               | POST /calidad/reanalisis/inicio-reanalisis
                               v
 +---------------------------------------------------------------------+
-|  2. EXITO                                                            |
+|  3. EXITO                                                            |
 |     GET /calidad/reanalisis/inicio-reanalisis-ok (redirect)         |
 |     Template: calidad/reanalisis/inicio-reanalisis-ok.html          |
 |  +---------------------------------------------------------------+  |
@@ -64,24 +77,25 @@ Permite iniciar un nuevo analisis de control de calidad para un lote que ya fue 
 +---------------------------------------------------------------------+
 ```
 
-**Nota:** Este CU usa flujo de 2 pasos (formulario -> exito) sin pantalla de confirmacion intermedia.
+**Nota:** Este CU usa flujo de 3 pasos (formulario -> confirmacion -> exito) consistente con los demas CUs del sistema.
 
 ---
 
 ## 4. ARCHIVOS INVOLUCRADOS
 
 ### Frontend (Templates)
-| Archivo | Descripcion | Lineas |
-|---------|-------------|--------|
-| `templates/calidad/reanalisis/inicio-reanalisis.html` | Formulario principal | 514 |
-| `templates/calidad/reanalisis/inicio-reanalisis-ok.html` | Pantalla de exito | 144 |
+| Archivo | Descripcion |
+|---------|-------------|
+| `templates/calidad/reanalisis/inicio-reanalisis.html` | Formulario principal |
+| `templates/calidad/reanalisis/inicio-reanalisis-confirm.html` | Pantalla de confirmacion (estilo purpura) |
+| `templates/calidad/reanalisis/inicio-reanalisis-ok.html` | Pantalla de exito (estilo unificado purpura) |
 
 ### Backend
-| Archivo | Descripcion | Lineas |
-|---------|-------------|--------|
-| `controller/cu/ModifReanalisisLoteController.java` | Controlador | 102 |
-| `service/cu/ModifReanalisisLoteService.java` | Servicio de negocio | 136 |
-| `service/cu/AbstractCuService.java` | Clase base con validaciones comunes | - |
+| Archivo | Descripcion |
+|---------|-------------|
+| `controller/cu/ModifReanalisisLoteController.java` | Controlador |
+| `service/cu/ModifReanalisisLoteService.java` | Servicio de negocio |
+| `service/cu/AbstractCuService.java` | Clase base con validaciones comunes |
 
 ### Validadores Especializados
 | Archivo | Responsabilidad |
@@ -113,7 +127,7 @@ Permite iniciar un nuevo analisis de control de calidad para un lote que ya fue 
 |-------|---------|------|-------------------|-------------------|
 | Lote | codigoLote | select (Select2) | required | Existencia verificada |
 | Fecha del Reanalisis | fechaMovimiento | date | required | @NotNull, @PastOrPresent |
-| Numero de Reanalisis | nroReanalisis | text | required, maxlength=20 | @Size(max=20), Unico |
+| Numero de Reanalisis | nroReanalisis (hidden) + prefijoReanalisis (select) + digitosReanalisis (text) | Mascara PREFIJO-N-NNNN | required, maxlength=6 (digitos) | @Size(max=20), Unico |
 | Motivo del Cambio | motivoDelCambio | textarea | required, minlength=20 | @NotNull, @Size(min=20) |
 
 ---
@@ -130,7 +144,7 @@ El sistema implementa validacion en 3 capas: Frontend (HTML5), Bean Validation (
 |-------|------------------|----------------|
 | Lote | required | Seleccion obligatoria |
 | Fecha del Reanalisis | required, type=date | Campo obligatorio |
-| Numero de Reanalisis | required, maxlength=20 | Maximo 20 caracteres |
+| Numero de Reanalisis | required, maxlength=6 (digitos) | Mascara PREFIJO-N-NNNN |
 | Motivo del Cambio | required, minlength=20 | Minimo 20 caracteres |
 
 **JavaScript Dinamico:**
@@ -138,6 +152,11 @@ El sistema implementa validacion en 3 capas: Frontend (HTML5), Bean Validation (
 - Select2 con tema Bootstrap 5
 - Carga detalles del lote al seleccionar (desde array inyectado)
 - Muestra historial de analisis previos del lote
+- Mascara para numero de reanalisis:
+  - Selector de prefijo: MP, ME, MPD, PTD, SE, PT
+  - Campo de digitos con formato automatico N-NNNN
+  - Campo hidden que combina prefijo + digitos (ej: MP-1-0001)
+  - Restauracion de valores existentes al recargar por error de validacion
 
 ### 6.2 Capa 2 - Bean Validation (Spring)
 
@@ -161,11 +180,11 @@ El metodo `validarReanalisisLoteInput()` ejecuta las siguientes validaciones en 
 | 1 | BindingResult previo | Errores de Bean Validation |
 | 2 | Motivo del cambio >= 20 chars | El motivo del cambio es obligatorio (mínimo 20 caracteres) |
 | 3 | Nro analisis no nulo | Ingrese un nro de analisis |
-| 4a | Nro analisis unico (otro lote) | Nro de analisis ya registrado en otro lote |
-| 4b | Nro analisis unico (mismo lote con dictamen) | Nro de analisis ya registrado en el mismo lote |
-| 5 | Lote existe | Lote no encontrado |
-| 6 | Fecha movimiento >= fecha ingreso | Fecha anterior a ingreso del lote |
-| 7 | Fecha analisis >= fecha ingreso | Fecha anterior a ingreso del lote |
+| 4a | Nro analisis unico (otro lote) | Nro de analisis ya registrado en otro lote. |
+| 4b | Nro analisis unico (mismo lote con dictamen) | Nro de analisis ya registrado en el mismo lote. |
+| 5 | Lote existe | Lote no encontrado. |
+| 6 | Fecha movimiento >= fecha ingreso | La fecha del movimiento no puede ser anterior a la fecha de ingreso del lote |
+| 7 | Fecha analisis >= fecha ingreso | La fecha de realizado el analisis no puede ser anterior a la fecha de ingreso del lote |
 
 ### 6.4 RESUMEN DE VALIDACIONES POR CAMPO
 
@@ -173,7 +192,7 @@ El metodo `validarReanalisisLoteInput()` ejecuta las siguientes validaciones en 
 |-------|----------|-----------------|---------|
 | codigoLote | required | @NotNull | Existencia |
 | fechaMovimiento | required | @NotNull, @PastOrPresent | >= fechaIngreso lote |
-| nroReanalisis | required, maxlength | @Size(max=20) | No nulo, unico |
+| nroReanalisis | Mascara PREFIJO-N-NNNN (prefijo select + digitos maxlength=6) | @Size(max=20) | No nulo, unico |
 | motivoDelCambio | required, minlength | @NotNull, @Size(min=20) | >= 20 caracteres (ANMAT) |
 
 ---
@@ -182,14 +201,16 @@ El metodo `validarReanalisisLoteInput()` ejecuta las siguientes validaciones en 
 
 ### 7.1 Estilo Visual
 
-El formulario utiliza la paleta de colores **purpura** que identifica las operaciones de calidad:
+Tanto el formulario como la pantalla de exito utilizan la paleta de colores **purpura** que identifica las operaciones de calidad:
 
 - **Fondo de pagina:** Gradiente purpura (`#8b5cf6 -> #7c3aed`)
-- **Tarjeta del formulario:** Blanca con sombra suave
-- **Botones primarios:** Gradiente purpura (`btn-custom-primary`)
+- **Tarjeta del formulario:** Blanca con sombra suave (`success-container`)
+- **Botones primarios:** Gradiente purpura (`btn-custom-primary`, `btn-primary`)
 - **Iconos de seccion:** Bootstrap Icons en blanco sobre fondo purpura
 - **Badge CU:** `CU8` en purpura
 - **Info box:** Fondo lavanda con borde purpura
+- **Pantalla de exito:** Icono animado de check, secciones con datos del lote, tablas de analisis y movimientos
+- **Badge "En Curso":** Estilo especial amarillo (`analysis-badge-pending`) para analisis pendientes
 
 ### 7.2 Librerias Utilizadas
 
@@ -228,7 +249,7 @@ Este CU no consume endpoints AJAX adicionales. La logica dinamica se basa en dat
 
 ### 8.1 Clase: ModifReanalisisLoteController
 
-El controlador maneja el flujo de 2 pasos (formulario -> exito) y extiende `AbstractCuController` para heredar servicios comunes.
+El controlador maneja el flujo de 3 pasos (formulario -> confirmacion -> exito) y extiende `AbstractCuController` para heredar servicios comunes.
 
 ### 8.2 Flujo de Endpoints
 
@@ -236,7 +257,8 @@ El controlador maneja el flujo de 2 pasos (formulario -> exito) y extiende `Abst
 |--------|-----|-------------|
 | GET | /calidad/reanalisis/cancelar | Cancela operacion, redirige a home |
 | GET | /calidad/reanalisis/inicio-reanalisis | Muestra formulario |
-| POST | /calidad/reanalisis/inicio-reanalisis | Procesa reanalisis |
+| POST | /calidad/reanalisis/inicio-reanalisis/confirm | Valida y muestra pantalla de confirmacion |
+| POST | /calidad/reanalisis/inicio-reanalisis | Persiste reanalisis |
 | GET | /calidad/reanalisis/inicio-reanalisis-ok | Pantalla exito |
 
 ### 8.3 Modelo en GET
@@ -246,7 +268,7 @@ El controlador maneja el flujo de 2 pasos (formulario -> exito) y extiende `Abst
 
 ### 8.4 Caracteristicas Destacadas
 
-- **Flujo de 2 pasos:** Sin pantalla de confirmacion intermedia.
+- **Flujo de 3 pasos:** Incluye pantalla de confirmacion intermedia consistente con otros CUs.
 - **Flash Attributes:** El resultado (LoteDTO) se pasa a la pantalla de exito via RedirectAttributes.
 - **Filtrado de lotes:** Solo muestra lotes elegibles para reanalisis (ver 8.5).
 
@@ -365,13 +387,8 @@ Todos los logs usan el prefijo `[CU8]` para facilitar la busqueda.
 
 ---
 
-## 15. MEJORAS SUGERIDAS
-
-| Prioridad | Mejora |
-|-----------|--------|
-| BAJA | Agregar pantalla de confirmacion intermedia para consistencia con otros CUs |
-
----
-
-*Documento generado: 2025-12-13*
-*Version: 1.5*
+*Documento generado: 2025-12-26*
+*Version: 1.8*
+*Cambios v1.8: Agregada pantalla de confirmacion intermedia (flujo de 3 pasos)*
+*Cambios v1.7: Pantalla de exito actualizada con estilo visual unificado (paleta purpura)*
+*Cambios v1.6: Actualizado formato de numero de reanalisis con mascara PREFIJO-N-NNNN*

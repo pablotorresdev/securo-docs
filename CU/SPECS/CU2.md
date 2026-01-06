@@ -101,7 +101,7 @@ Permite cambiar el dictamen de un lote a CUARENTENA para iniciar el proceso de a
 | Archivo | Uso en CU2 |
 |---------|------------|
 | `utils/MovimientoModificacionUtils.java` | Factory para crear Movimiento MODIFICACION |
-| `dto/DTOUtils.java` | Factory para crear entidad Analisis |
+| `dto/mapper/AnalisisMapper.java` | Factory para crear entidad Analisis |
 
 ### DTOs y Entidades
 | Archivo | Uso en CU2 |

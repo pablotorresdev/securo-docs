@@ -1,4 +1,4 @@
-# CU23 - DEVOLUCION VENTA: Especificacion Funcional
+# CU24 - DEVOLUCION VENTA: Especificacion Funcional
 
 **Version:** 1.0
 **Fecha:** 2025-12-06
@@ -38,18 +38,18 @@ La devolucion de venta:
 - El lote original **no cambia** su dictamen ni estado
 - Se registra un **movimiento de ALTA** con motivo DEVOLUCION_VENTA
 
-**Importante:** A diferencia de CU4 (Devolucion Compra), CU23 NO descuenta stock del lote original. Crea un lote nuevo con las unidades devueltas.
+**Importante:** A diferencia de CU4 (Devolucion Compra), CU24 NO descuenta stock del lote original. Crea un lote nuevo con las unidades devueltas.
 
 ### 1.3 Cuando Usar Este CU
 
-Usar CU23 cuando:
+Usar CU24 cuando:
 - Un cliente devuelve productos que fueron vendidos
 - Se necesita registrar el ingreso de unidades devueltas
 - Se requiere mantener trazabilidad de las unidades devueltas
 
-**NO usar CU23 cuando:**
+**NO usar CU24 cuando:**
 - Se quiere devolver al proveedor → usar **CU4 (Devolucion Compra)**
-- Se quiere registrar una venta → usar **CU22 (Venta Producto)**
+- Se quiere registrar una venta → usar **CU23 (Venta Producto)**
 - El lote esta en RECALL → usar flujo de recall correspondiente
 
 ### 1.4 Resultado del CU
@@ -202,7 +202,7 @@ Para lotes no trazados, se muestran campos numericos por bulto:
 |---|-------|------------|------------------|
 | 1 | Lote | Debe seleccionar uno | "El lote no existe." |
 | 2 | Lote | Debe existir y estar activo | "Lote no encontrado." |
-| 3 | Movimiento Origen | Debe seleccionar uno | "No se encontro el movimiento de venta origen" |
+| 3 | Movimiento Origen | Debe seleccionar uno | "No se encontró el movimiento de venta origen" |
 | 4 | Motivo del Cambio | Minimo 20 caracteres | "El motivo del cambio es obligatorio (mínimo 20 caracteres)" |
 
 ### 5.2 Validaciones de Fecha
@@ -216,7 +216,7 @@ Para lotes no trazados, se muestran campos numericos por bulto:
 
 | Validacion | Mensaje de Error |
 |------------|------------------|
-| Debe seleccionar al menos una traza | "Debe seleccionar al menos una traza para devolver." |
+| Debe seleccionar al menos una traza | "Debe seleccionar al menos una traza." |
 | Las trazas deben estar en estado VENDIDO | (implícito - solo se muestran vendidas) |
 
 ### 5.4 Validaciones de Cantidades (Lotes No Trazados)
@@ -352,18 +352,18 @@ Opciones: "Registrar otra devolucion" o "Ir al inicio"
 
 ## 8. Operaciones Posteriores
 
-### 8.1 Despues de CU23
+### 8.1 Despues de CU24
 
 | CU | Nombre | Cuando Aplicar |
 |----|--------|----------------|
 | CU2 | Dictamen Cuarentena | Para analizar las unidades devueltas |
-| CU26 | Reverso | Si la devolucion fue incorrecta |
-| CU25 | Ajuste Stock | Si las unidades deben descartarse |
+| CU31 | Reverso | Si la devolucion fue incorrecta |
+| CU30 | Ajuste Stock | Si las unidades deben descartarse |
 
 ### 8.2 Flujo Tipico Post-Devolucion
 
 ```
-CU23: Devolucion Venta
+CU24: Devolucion Venta
          |
          | Nuevo lote con estado DEVUELTO
          v
@@ -374,13 +374,13 @@ Evaluar    Descartar
 Unidades   Unidades
     |         |
     v         v
-CU2:       CU25:
+CU2:       CU30:
 Analizar   Ajuste Stock
 ```
 
 ### 8.3 Diferencia con Devolucion Compra
 
-| Aspecto | Devolucion Venta (CU23) | Devolucion Compra (CU4) |
+| Aspecto | Devolucion Venta (CU24) | Devolucion Compra (CU4) |
 |---------|-------------------------|-------------------------|
 | Tipo operacion | ALTA | BAJA |
 | Crea lote | SI (lote derivado) | NO |
@@ -493,7 +493,7 @@ Analizar   Ajuste Stock
 ### 10.1 Sobre el Proceso
 
 **P: ¿La devolucion de venta afecta el stock del lote original?**
-R: No directamente. CU23 crea un nuevo lote con las unidades devueltas. El lote original mantiene sus cantidades.
+R: No directamente. CU24 crea un nuevo lote con las unidades devueltas. El lote original mantiene sus cantidades.
 
 **P: ¿Que pasa con las unidades devueltas?**
 R: Se crea un nuevo lote con estado DEVUELTO. Este lote puede ser analizado (CU2) para determinar si las unidades pueden reintegrarse al stock o deben descartarse.
@@ -529,7 +529,7 @@ R: Si. Puede seleccionar solo algunas de las trazas vendidas.
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si registre una devolucion incorrecta?**
-R: Use CU26 (Reverso) para revertir la operacion.
+R: Use CU31 (Reverso) para revertir la operacion.
 
 **P: ¿Puedo modificar las trazas devueltas despues de confirmar?**
 R: No. Debe usar Reverso y registrar la devolucion nuevamente.
@@ -553,20 +553,20 @@ R: No. Debe usar Reverso y registrar la devolucion nuevamente.
 
 ## Relacion con Otros CUs
 
-### Operaciones Previas (que habilitan CU23)
+### Operaciones Previas (que habilitan CU24)
 
 | CU | Nombre | Resultado que Habilita |
 |----|--------|------------------------|
-| CU22 | Venta Producto | Lote con trazas VENDIDO |
+| CU23 | Venta Producto | Lote con trazas VENDIDO |
 
-### Operaciones Siguientes (despues de CU23)
+### Operaciones Siguientes (despues de CU24)
 
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
 | CU2 | Dictamen Cuarentena | Para analizar unidades devueltas |
-| CU25 | Ajuste Stock | Si se descartan las unidades |
-| CU26 | Reverso | Si se necesita revertir la devolucion |
+| CU30 | Ajuste Stock | Si se descartan las unidades |
+| CU31 | Reverso | Si se necesita revertir la devolucion |
 
 ---
 
-**Fin del Documento - CU23_DEVOLUCION_VENTA v1.0 - Especificacion Funcional**
+**Fin del Documento - CU24_DEVOLUCION_VENTA v1.0 - Especificacion Funcional**

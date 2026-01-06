@@ -1,4 +1,4 @@
-# CU24 - RETIRO DE MERCADO (RECALL): Especificacion Funcional
+# CU25 - RETIRO DE MERCADO (RECALL): Especificacion Funcional
 
 **Version:** 1.0
 **Fecha:** 2025-12-06
@@ -46,14 +46,14 @@ El retiro de mercado (recall) ejecuta **DOS operaciones simultaneas**:
 
 ### 1.3 Cuando Usar Este CU
 
-Usar CU24 cuando:
+Usar CU25 cuando:
 - Se detecta un defecto de calidad en productos vendidos
 - Hay una alerta sanitaria que requiere retiro del mercado
 - Autoridades regulatorias (ANMAT) ordenan el retiro
 - Se identifica riesgo para la salud del consumidor
 
-**NO usar CU24 cuando:**
-- El cliente devuelve por motivos comerciales -> usar **CU23 (Devolucion Venta)**
+**NO usar CU25 cuando:**
+- El cliente devuelve por motivos comerciales -> usar **CU24 (Devolucion Venta)**
 - Se quiere devolver al proveedor -> usar **CU4 (Devolucion Compra)**
 - El lote ya esta completamente en RECALL
 
@@ -116,7 +116,7 @@ El sistema muestra lotes que cumplan **alguna** de estas condiciones:
 | Trazas VENDIDO | Tiene al menos una traza en estado VENDIDO |
 | Movimiento VENTA | Tiene al menos un movimiento con motivo VENTA |
 
-**Nota:** A diferencia de CU23 (Devolucion Venta), el recall NO excluye lotes ya en estado RECALL. Esto permite hacer recalls parciales o adicionales.
+**Nota:** A diferencia de CU24 (Devolucion Venta), el recall NO excluye lotes ya en estado RECALL. Esto permite hacer recalls parciales o adicionales.
 
 ### 3.3 Modalidades de Retiro
 
@@ -215,7 +215,7 @@ Para lotes no trazados, se muestran campos numericos por bulto:
 
 | Validacion | Mensaje de Error |
 |------------|------------------|
-| Debe seleccionar al menos una traza | "Debe seleccionar al menos una traza para devolver." |
+| Debe seleccionar al menos una traza | "Debe seleccionar al menos una traza." |
 | Las trazas deben estar en estado VENDIDO | (implicito - solo se muestran vendidas) |
 
 ### 5.4 Validaciones de Cantidades (Lotes No Trazados)
@@ -385,18 +385,18 @@ Opciones: "Registrar otro recall" o "Ir al inicio"
 
 ## 8. Operaciones Posteriores
 
-### 8.1 Despues de CU24
+### 8.1 Despues de CU25
 
 | CU | Nombre | Cuando Aplicar |
 |----|--------|----------------|
 | CU2 | Dictamen Cuarentena | Para analizar las unidades retiradas |
-| CU26 | Reverso | Si el recall fue incorrecto |
-| CU25 | Ajuste Stock | Para destruir unidades defectuosas |
+| CU31 | Reverso | Si el recall fue incorrecto |
+| CU30 | Ajuste Stock | Para destruir unidades defectuosas |
 
 ### 8.2 Flujo Tipico Post-Recall
 
 ```
-CU24: Retiro Mercado
+CU25: Retiro Mercado
          |
          | Nuevo lote con estado RECALL
          | Lote original en estado RECALL
@@ -408,14 +408,14 @@ Analizar   Destruir  Documentar
 Unidades   Unidades  para ANMAT
     |         |
     v         v
-CU2:       CU25:
+CU2:       CU30:
 Dictamen   Ajuste
 Cuarentena Stock
 ```
 
 ### 8.3 Diferencia con Devolucion Venta
 
-| Aspecto | Retiro Mercado (CU24) | Devolucion Venta (CU23) |
+| Aspecto | Retiro Mercado (CU25) | Devolucion Venta (CU24) |
 |---------|------------------------|-------------------------|
 | Tipo operacion | ALTA + MODIFICACION | ALTA |
 | Crea lote | SI (lote derivado `_R_N`) | SI (lote derivado `_D_N`) |
@@ -548,7 +548,7 @@ R: Las trazas DISPONIBLE del lote original pasan a estado RECALL. No se pueden v
 R: No es obligatorio en el formulario, pero es altamente recomendable documentarlo para cumplimiento regulatorio y trazabilidad ante ANMAT.
 
 **P: ¿Que diferencia hay con la devolucion de venta?**
-R: La devolucion (CU23) es por motivos comerciales y solo crea un lote nuevo. El recall (CU24) es por seguridad/calidad, crea un lote nuevo Y bloquea el lote original.
+R: La devolucion (CU24) es por motivos comerciales y solo crea un lote nuevo. El recall (CU25) es por seguridad/calidad, crea un lote nuevo Y bloquea el lote original.
 
 ### 10.2 Sobre los Lotes
 
@@ -574,7 +574,7 @@ R: Se pueden analizar las unidades del nuevo lote recall (CU2), pero el lote ori
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si registre un recall incorrecto?**
-R: Use CU26 (Reverso) para revertir la operacion.
+R: Use CU31 (Reverso) para revertir la operacion.
 
 **P: ¿Puedo modificar las trazas retiradas despues de confirmar?**
 R: No. Debe usar Reverso y registrar el recall nuevamente.
@@ -600,20 +600,20 @@ R: No. Debe usar Reverso y registrar el recall nuevamente.
 
 ## Relacion con Otros CUs
 
-### Operaciones Previas (que habilitan CU24)
+### Operaciones Previas (que habilitan CU25)
 
 | CU | Nombre | Resultado que Habilita |
 |----|--------|------------------------|
-| CU22 | Venta Producto | Lote con trazas VENDIDO |
+| CU23 | Venta Producto | Lote con trazas VENDIDO |
 
-### Operaciones Siguientes (despues de CU24)
+### Operaciones Siguientes (despues de CU25)
 
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
 | CU2 | Dictamen Cuarentena | Para analizar unidades retiradas |
-| CU25 | Ajuste Stock | Para destruir unidades defectuosas |
-| CU26 | Reverso | Si se necesita revertir el recall |
+| CU30 | Ajuste Stock | Para destruir unidades defectuosas |
+| CU31 | Reverso | Si se necesita revertir el recall |
 
 ---
 
-**Fin del Documento - CU24_RETIRO_MERCADO v1.0 - Especificacion Funcional**
+**Fin del Documento - CU25_RETIRO_MERCADO v1.0 - Especificacion Funcional**

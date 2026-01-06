@@ -336,8 +336,8 @@ Produccion  Compra
 |----|--------|----------------|---------|
 | CU2 | Cuarentena | Siempre - siguiente paso normal | Analista Control Calidad |
 | CU4 | Devolucion Compra | Si el material tiene problemas antes de analizar | Analista Planta |
-| CU25 | Ajuste Stock | Si hay error en las cantidades ingresadas | Supervisor o Analista Planta |
-| CU26 | Reverso Movimiento | Si se ingreso por error y debe anularse | Usuario que hizo el ingreso |
+| CU30 | Ajuste Stock | Si hay error en las cantidades ingresadas | Supervisor o Analista Planta |
+| CU31 | Reverso Movimiento | Si se ingreso por error y debe anularse | Usuario que hizo el ingreso |
 
 ### 8.3 Operaciones NO Posibles Inmediatamente
 
@@ -346,7 +346,7 @@ Produccion  Compra
 | CU3 | Muestreo | Requiere primero CU2 (asignar Nro Analisis) |
 | CU5/CU6 | Resultado Analisis | Requiere CU2 y CU3 previos |
 | CU7 | Consumo Produccion | Requiere lote APROBADO |
-| CU22 | Venta | Solo para Unidades de Venta LIBERADAS |
+| CU23 | Venta | Solo para Unidades de Venta LIBERADAS |
 
 ---
 
@@ -496,7 +496,7 @@ R: Descripcion del ingreso: numero de orden de compra, referencia al remito, mot
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si ingrese datos incorrectos?**
-R: Si aun no confirmo, puede volver a editar. Si ya confirmo, puede usar CU25 (Ajuste Stock) o CU26 (Reverso Movimiento).
+R: Si aun no confirmo, puede volver a editar. Si ya confirmo, puede usar CU30 (Ajuste Stock) o CU31 (Reverso Movimiento).
 
 **P: ¿Que hago si el producto o proveedor no existe?**
 R: Debe solicitar el alta antes de continuar:
@@ -524,8 +524,8 @@ R: Debe solicitar el alta antes de continuar:
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
 | CU2 | Dictamen Cuarentena | Lote recien creado con dictamen RECIBIDO |
-| CU26 | Reverso | Si se necesita anular el ingreso |
+| CU31 | Reverso | Si se necesita anular el ingreso |
 
 ---
 
-**Fin del Documento - CU1_ALTA_INGRESO_COMPRA v2.1 - Especificacion Funcional**
+**Fin del Documento - CU1_ALTA_INGRESO_COMPRA v2.2 - Especificacion Funcional**

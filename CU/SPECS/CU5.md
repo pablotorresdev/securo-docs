@@ -111,7 +111,7 @@ El flujo de 3 pasos es consistente con los demas CUs del sistema: formulario -> 
 | Archivo | Uso en CU5 |
 |---------|------------|
 | `utils/MovimientoModificacionUtils.java` | Factory para crear Movimiento MODIFICACION |
-| `dto/DTOUtils.java` | Factory para crear/actualizar entidad Analisis |
+| `dto/mapper/AnalisisMapper.java` | Factory para crear/actualizar entidad Analisis |
 
 ### DTOs y Entidades
 | Archivo | Uso en CU5 |

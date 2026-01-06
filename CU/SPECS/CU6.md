@@ -109,7 +109,7 @@ El flujo de 3 pasos es consistente con los demas CUs del sistema: formulario -> 
 | Archivo | Uso en CU6 |
 |---------|------------|
 | `utils/MovimientoModificacionUtils.java` | Factory para crear Movimiento MODIFICACION |
-| `dto/DTOUtils.java` | Factory para crear/actualizar entidad Analisis |
+| `dto/mapper/AnalisisMapper.java` | Factory para crear/actualizar entidad Analisis |
 
 ### DTOs y Entidades
 | Archivo | Uso en CU6 |
@@ -412,7 +412,7 @@ Este metodo ejecuta toda la operacion en una unica transaccion. El flujo para RE
 
 ### 9.3 Diferencia con CU5 (Aprobado)
 
-La logica en el servicio diferencia ambos casos en la linea 87-91 de `ModifResultadoAnalisisService.java`:
+La logica en el servicio diferencia ambos casos en `ModifResultadoAnalisisService.java`:
 
 ```java
 if (DictamenEnum.APROBADO == dto.getDictamenFinal()) {

@@ -40,8 +40,8 @@ Usar CU4 cuando:
 
 **NO usar CU4 cuando:**
 - El lote es de produccion interna (Conifarma) → no aplica devolucion a proveedor
-- Se quiere ajustar el stock por otro motivo → usar **CU25 (Ajuste Stock)**
-- Se quiere anular el ingreso por error → usar **CU26 (Reverso)**
+- Se quiere ajustar el stock por otro motivo → usar **CU30 (Ajuste Stock)**
+- Se quiere anular el ingreso por error → usar **CU31 (Reverso)**
 - El producto es Semielaborado o Unidad de Venta → estos son de produccion interna
 
 ### 1.3 Resultado del CU
@@ -286,13 +286,13 @@ Una vez devuelto, el lote queda **inactivo para operaciones**:
 | CU3 | Muestreo | Lote sin stock |
 | CU5/CU6 | Resultado Analisis | Lote con dictamen RECHAZADO |
 | CU7 | Consumo Produccion | Lote sin stock y RECHAZADO |
-| CU26 | Reverso | Solo el creador del movimiento puede revertir |
+| CU31 | Reverso | Solo el creador del movimiento puede revertir |
 
 ### 8.2 Unica Operacion Posible
 
 | CU | Nombre | Condicion |
 |----|--------|-----------|
-| CU26 | Reverso | Solo si el usuario que ejecuto CU4 quiere revertir su propia operacion |
+| CU31 | Reverso | Solo si el usuario que ejecuto CU4 quiere revertir su propia operacion |
 
 ### 8.3 Flujo Tipico que Termina en CU4
 
@@ -420,7 +420,7 @@ CU4: Devolucion Compra (DEVUELTO/RECHAZADO)
 ### 10.1 Sobre el Proceso
 
 **P: ¿Puedo devolver solo una parte del lote?**
-R: No. La devolucion es siempre del lote completo. Si necesita ajustar parcialmente, use CU25 (Ajuste Stock).
+R: No. La devolucion es siempre del lote completo. Si necesita ajustar parcialmente, use CU30 (Ajuste Stock).
 
 **P: ¿Puedo devolver un lote aprobado?**
 R: Si, aunque es poco comun. Puede ocurrir si se detectan problemas post-aprobacion o el proveedor solicita la devolucion.
@@ -440,7 +440,7 @@ R: No. El lote queda con cantidad cero y estado DEVUELTO. No puede usarse para n
 R: Si, el lote permanece en el sistema para trazabilidad, pero con estado DEVUELTO y cantidad cero.
 
 **P: ¿Puedo revertir una devolucion?**
-R: Solo mediante CU26 (Reverso), y unicamente si usted fue quien realizo la devolucion.
+R: Solo mediante CU31 (Reverso), y unicamente si usted fue quien realizo la devolucion.
 
 ### 10.3 Sobre la Lista de Lotes
 
@@ -458,10 +458,10 @@ R: Porque tecnicamente es posible devolver un lote aprobado si se detectan probl
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si devolvi el lote incorrecto?**
-R: Puede usar CU26 (Reverso) si usted realizo la devolucion. Esto restaurara el lote a su estado anterior.
+R: Puede usar CU31 (Reverso) si usted realizo la devolucion. Esto restaurara el lote a su estado anterior.
 
 **P: ¿Que hago si la fecha de devolucion es incorrecta?**
-R: Debera usar CU26 (Reverso) para anular la devolucion y repetirla con la fecha correcta.
+R: Debera usar CU31 (Reverso) para anular la devolucion y repetirla con la fecha correcta.
 
 ---
 
@@ -493,7 +493,7 @@ R: Debera usar CU26 (Reverso) para anular la devolucion y repetirla con la fecha
 
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
-| CU26 | Reverso | Solo si el mismo usuario quiere revertir su operacion |
+| CU31 | Reverso | Solo si el mismo usuario quiere revertir su operacion |
 
 ---
 

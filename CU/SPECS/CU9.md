@@ -129,23 +129,23 @@ Proceso batch automatico que se ejecuta diariamente a las **5:00 AM** para detec
 
 ### Backend (Proceso Batch)
 
-| Archivo | Descripcion | Lineas |
-|---------|-------------|--------|
-| `service/cu/FechaValidatorService.java` | Servicio batch CU9/CU10 | 239 |
-| `service/cu/AbstractCuService.java` | Clase base con repositorios | - |
+| Archivo | Descripcion |
+|---------|-------------|
+| `service/cu/FechaValidatorService.java` | Servicio batch CU9/CU10 |
+| `service/cu/AbstractCuService.java` | Clase base con repositorios |
 
 ### Test
 
-| Archivo | Descripcion | Lineas |
-|---------|-------------|--------|
-| `service/cu/FechaValidatorServiceTest.java` | Tests unitarios completos | 1026 |
+| Archivo | Descripcion |
+|---------|-------------|
+| `service/cu/FechaValidatorServiceTest.java` | Tests unitarios completos |
 
 ### Frontend (Consulta de Monitoreo)
 
-| Archivo | Descripcion | Lineas |
-|---------|-------------|--------|
-| `templates/lotes/list-fechas-lotes.html` | Consulta de fechas | 360 |
-| `controller/LotesController.java` | Controller consulta (parcial) | 112 |
+| Archivo | Descripcion |
+|---------|-------------|
+| `templates/lotes/list-fechas-lotes.html` | Consulta de fechas |
+| `controller/LotesController.java` | Controller consulta (parcial) |
 
 ### Enums Relacionados
 

@@ -1,7 +1,8 @@
 # CU3 - MUESTREO: Especificacion Funcional
 
-**Version:** 1.0
+**Version:** 1.1
 **Fecha:** 2025-12-09
+**Ultima actualizacion:** 2025-12-28
 **Sistema:** CONITRACK - Gestion de Stock Farmaceutico
 **Tipo Operacion:** BAJA
 **Motivo:** MUESTREO
@@ -108,12 +109,14 @@ Para que un lote este disponible para muestreo, debe cumplir:
 |-----------|-------------|
 | **Trazas activas** | El lote debe tener trazas activas disponibles |
 | **Tipo de producto** | Normalmente UNIDAD_VENTA con control individual |
+| **Estado NO RECALL** | El lote no puede estar en estado RECALL (retiro de mercado) |
 
 #### Para Muestreo Multi-Bulto:
 | Requisito | Descripcion |
 |-----------|-------------|
 | **Sin trazas activas** | El lote NO debe tener trazas activas |
 | **Tipo de producto** | API, Excipiente, Acond. Primario/Secundario, Semielaborado |
+| **Estado NO RECALL** | El lote no puede estar en estado RECALL (retiro de mercado) |
 
 ### 3.3 Dictamenes Compatibles
 
@@ -245,37 +248,35 @@ Para cada bulto se muestra una tarjeta con:
 
 | # | Campo | Validacion | Mensaje de Error |
 |---|-------|------------|------------------|
-| 1 | Lote | Debe seleccionar uno | "Lote no encontrado" |
-| 2 | Lote | Debe existir y estar activo | "Lote no encontrado" |
-| 3 | Lote | Debe tener analisis asociado | "El lote no tiene Analisis asociado" |
-| 4 | Motivo del Cambio | Debe ingresar valor | "El motivo del cambio es obligatorio" |
-| 5 | Motivo del Cambio | Minimo 20 caracteres | "El motivo del cambio es obligatorio (mínimo 20 caracteres)" |
-| 6 | Motivo del Cambio | Maximo 300 caracteres | "El motivo no puede exceder 300 caracteres" |
+| 1 | Lote | Debe seleccionar uno | "Lote no encontrado." |
+| 2 | Lote | Debe existir y estar activo | "Lote no encontrado." |
+| 3 | Lote | Debe tener analisis asociado | "El lote no tiene Analisis asociado." |
+| 4 | Motivo del Cambio | Obligatorio, min 20 chars | "El motivo del cambio es obligatorio (mínimo 20 caracteres)" |
 
 ### 7.2 Validaciones de Fecha
 
 | Validacion | Mensaje de Error |
 |------------|------------------|
-| La fecha de muestreo debe ser igual o posterior a la fecha de ingreso del lote | "La fecha de movimiento no puede ser anterior a la fecha de ingreso del lote" |
-| La fecha de analisis debe ser igual o posterior a la fecha de ingreso del lote | "La fecha de analisis no puede ser anterior a la fecha de ingreso del lote" |
+| La fecha de muestreo debe ser igual o posterior a la fecha de ingreso del lote | "La fecha del movimiento no puede ser anterior a la fecha de ingreso del lote" |
+| La fecha de analisis debe ser igual o posterior a la fecha de ingreso del lote | "La fecha de realizado el analisis no puede ser anterior a la fecha de ingreso del lote" |
 
 ### 7.3 Validaciones Muestreo Trazable
 
 | # | Campo | Validacion | Mensaje de Error |
 |---|-------|------------|------------------|
-| 1 | Bulto | Debe seleccionar uno | "Bulto no encontrado" |
-| 2 | Bulto | Debe existir y estar activo | "Bulto no encontrado" |
-| 3 | Trazas | Debe seleccionar al menos una | "Debe seleccionar al menos una unidad a muestrear" |
-| 4 | Cantidad | Debe ser menor o igual al stock del bulto | "La cantidad supera el stock disponible" |
-| 5 | Nro Analisis | Debe coincidir con el analisis en curso | "El numero de analisis no coincide con el analisis en curso" |
+| 1 | Bulto | Debe seleccionar uno | "Bulto no encontrado." |
+| 2 | Bulto | Debe existir y estar activo | "Bulto no encontrado." |
+| 3 | Trazas | Debe seleccionar al menos una | "Debe seleccionar al menos una unidad a muestrear." |
+| 4 | Cantidad | Debe ser menor o igual al stock del bulto | "La cantidad excede el stock disponible del bulto." |
+| 5 | Nro Analisis | Debe coincidir con el analisis en curso | "El número de análisis no coincide con el análisis en curso" |
 
 ### 7.4 Validaciones Muestreo Multi-Bulto
 
 | # | Campo | Validacion | Mensaje de Error |
 |---|-------|------------|------------------|
-| 1 | Cantidades | Al menos una cantidad debe ser > 0 | "Debe ingresar al menos una cantidad a muestrear" |
-| 2 | Cantidad por bulto | No puede exceder stock del bulto | "La cantidad supera el stock del bulto X" |
-| 3 | Unidades | Deben ser compatibles con la unidad base | "Unidad de medida no compatible" |
+| 1 | Cantidades | Al menos una cantidad debe ser > 0 | "Debe ingresar las cantidades a consumir" |
+| 2 | Cantidad por bulto | No puede exceder stock del bulto | "La cantidad ingresada ({cant} {um}) no puede superar el stock actual del bulto {n} ({stock} {um})" |
+| 3 | Unidades | Deben ser compatibles con el producto | "Unidad no compatible con el producto." |
 
 ---
 
@@ -420,8 +421,8 @@ Produccion  Devolucion
 | CU | Nombre | Por Que No |
 |----|--------|------------|
 | CU7 | Consumo Produccion | Requiere lote APROBADO |
-| CU21 | Liberacion | Requiere lote APROBADO tipo Unidad de Venta |
-| CU22 | Venta | Requiere lote LIBERADO |
+| CU22 | Liberacion | Requiere lote APROBADO tipo Unidad de Venta |
+| CU23 | Venta | Requiere lote LIBERADO |
 
 ---
 
@@ -515,7 +516,7 @@ Produccion  Devolucion
 
 **Resultado:**
 - El sistema rechaza el formulario
-- Mensaje: "Debe seleccionar al menos una unidad a muestrear"
+- Mensaje: "Debe seleccionar al menos una unidad a muestrear."
 - El usuario debe seleccionar las trazas a muestrear
 
 ### 11.5 Caso Error: Cantidad Excede Stock
@@ -529,7 +530,7 @@ Produccion  Devolucion
 
 **Resultado:**
 - El sistema rechaza el formulario
-- Mensaje: "La cantidad supera el stock del bulto"
+- Mensaje: "La cantidad ingresada (10 KG) no puede superar el stock actual del bulto 1 (5 KG)"
 - El usuario debe corregir la cantidad
 
 ---
@@ -575,10 +576,10 @@ R: No. Solo aparecen en la lista las trazas con estado DISPONIBLE o similar.
 ### 12.4 Sobre Errores
 
 **P: ¿Que hago si muestree el bulto incorrecto?**
-R: Puede usar CU26 (Reverso Movimiento) para anular la operacion si tiene permisos. Luego repita el muestreo correctamente.
+R: Puede usar CU31 (Reverso Movimiento) para anular la operacion si tiene permisos. Luego repita el muestreo correctamente.
 
 **P: ¿Que hago si la cantidad muestreada fue incorrecta?**
-R: Si muestreo de mas, use CU26 (Reverso Movimiento) para anular. Si muestreo de menos, puede realizar otro muestreo adicional.
+R: Si muestreo de mas, use CU31 (Reverso Movimiento) para anular. Si muestreo de menos, puede realizar otro muestreo adicional.
 
 **P: ¿Puedo muestrear el mismo lote varias veces?**
 R: Si, siempre que haya stock disponible. Cada muestreo genera un movimiento separado.
@@ -615,7 +616,7 @@ R: Si, siempre que haya stock disponible. Cada muestreo genera un movimiento sep
 | CU5 | Resultado Aprobado | Lote en CUARENTENA con muestreo realizado |
 | CU6 | Resultado Rechazado | Lote en CUARENTENA con muestreo realizado |
 | CU11 | Anulacion Analisis | Lote con analisis en curso |
-| CU26 | Reverso Movimiento | Ultimo movimiento fue muestreo |
+| CU31 | Reverso Movimiento | Ultimo movimiento fue muestreo |
 
 ---
 
@@ -716,4 +717,4 @@ Codigos de auditoria:
 
 ---
 
-**Fin del Documento - CU3_MUESTREO v1.0 - Especificacion Funcional**
+**Fin del Documento - CU3_MUESTREO v1.1 - Especificacion Funcional**

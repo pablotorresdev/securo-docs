@@ -1,4 +1,4 @@
-# CU27 - TRAZADO LOTE: Especificacion Funcional
+# CU21 - TRAZADO LOTE: Especificacion Funcional
 
 **Version:** 1.0
 **Fecha:** 2025-12-06
@@ -39,15 +39,15 @@ La trazabilidad farmaceutica (ANMAT) requiere que cada unidad de venta pueda ser
 
 ### 1.3 Cuando Usar Este CU
 
-Usar CU27 cuando:
+Usar CU21 cuando:
 - Un lote de Unidad de Venta fue aprobado pero aun no tiene trazas asignadas
 - Se necesita asignar numeracion de trazas antes de vender
 
-**NO usar CU27 cuando:**
+**NO usar CU21 cuando:**
 - El lote ya tiene trazas asignadas → ya esta trazado
 - El lote no es de tipo Unidad de Venta → no requiere trazas individuales
 - El lote no esta aprobado → usar primero **CU5 (Resultado Aprobado)**
-- Se quiere vender → usar **CU22 (Venta Producto)** despues de trazar
+- Se quiere vender sin trazar → usar **CU23 (Venta Producto)** despues de trazar
 
 ### 1.4 Resultado del CU
 
@@ -56,7 +56,7 @@ Al completar exitosamente:
 - Las trazas se **distribuyen entre los bultos** segun sus cantidades
 - El lote se marca como **trazado = true**
 - Se registra un **movimiento de MODIFICACION** con motivo TRAZADO
-- El lote queda listo para venta (CU22) si tiene dictamen LIBERADO
+- El lote queda listo para ser LIBERADO (CU22)  
 
 ---
 
@@ -241,7 +241,7 @@ Las trazas se asignan secuencialmente a cada bulto segun su cantidad:
 | Dictamen Final | (dictamen actual del lote, sin cambio) |
 | Usuario | Usuario que realizo la operacion |
 | Fecha | Fecha de trazado indicada |
-| Motivo del cambio | "[CU27] " + Motivo del cambio |
+| Motivo del cambio | "[CU21] " + Motivo del cambio |
 | Activo | SI |
 
 ---
@@ -281,13 +281,13 @@ Opciones: "Trazar otro lote" o "Ir al inicio"
 
 ## 8. Operaciones Posteriores
 
-### 8.1 Despues de CU27
+### 8.1 Despues de CU21
 
 | CU | Nombre | Cuando Aplicar |
 |----|--------|----------------|
-| CU21 | Confirmar Lote Liberado | Para habilitar la venta (si aun no esta LIBERADO) |
-| CU22 | Venta Producto | Para vender el lote trazado (si esta LIBERADO) |
-| CU26 | Reverso | Si el trazado fue incorrecto |
+| CU22 | Confirmar Lote Liberado | Para habilitar la venta (si aun no esta LIBERADO) |
+| CU23 | Venta Producto | Para vender el lote trazado (si esta LIBERADO) |
+| CU31 | Reverso | Si el trazado fue incorrecto |
 
 ### 8.2 Flujo Tipico con Trazado
 
@@ -304,24 +304,24 @@ CU3: Muestreo
 CU5: Resultado APROBADO
          |
          v
-CU27: Trazado Lote  ◄── [Este CU]
+CU21: Trazado Lote  ◄── [Este CU]
          |
          v
-CU21: Confirmar LIBERADO
+CU22: Confirmar LIBERADO
          |
          v
-CU22: Venta del Producto
+CU23: Venta del Producto
 ```
 
 ### 8.3 Alternativa: Trazado en Ingreso
 
-Si las trazas se asignan durante el ingreso (CU20), no es necesario CU27:
+Si las trazas se asignan durante el ingreso (CU20), no es necesario CU21:
 
 ```
 CU20: Ingreso Produccion (con traza inicial)
          |
          v (trazas ya asignadas)
-CU2 → CU3 → CU5 → CU21 → CU22
+CU2 → CU3 → CU5 → CU22 → CU23
 ```
 
 ---
@@ -429,7 +429,7 @@ R: Una traza es un identificador unico asignado a cada unidad individual de un p
 R: La trazabilidad es requerida por ANMAT para productos farmaceuticos. Permite identificar y retirar productos especificos en caso de recall, y garantiza la autenticidad del producto.
 
 **P: ¿Cuando debo trazar?**
-R: Despues de que el lote sea aprobado (CU5) y antes de venderlo (CU22). Si el lote no fue trazado durante el ingreso (CU20), debe trazarse con CU27.
+R: Despues de que el lote sea aprobado (CU5) y antes de venderlo (CU23). Si el lote no fue trazado durante el ingreso (CU20), debe trazarse con CU21.
 
 **P: ¿Puedo trazar durante el ingreso?**
 R: Si. En CU20 (Ingreso Produccion) hay un campo opcional "Traza Inicial" que permite asignar trazas en el momento del ingreso.
@@ -467,7 +467,7 @@ R: No. El trazado siempre asigna trazas a todas las unidades del lote.
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si trace con el numero incorrecto?**
-R: Use CU26 (Reverso) para anular el trazado y luego repita con el numero correcto.
+R: Use CU31 (Reverso) para anular el trazado y luego repita con el numero correcto.
 
 **P: ¿Puedo modificar las trazas despues de asignarlas?**
 R: No directamente. Debe usar Reverso y volver a trazar.
@@ -485,27 +485,27 @@ R: No directamente. Debe usar Reverso y volver a trazar.
 7. **Campo critico:** Numero de traza inicial (debe ser > 0)
 8. **Campo critico:** Motivo del cambio (mínimo 20 caracteres)
 9. **Resultado:** Lote marcado como trazado = true, trazas distribuidas por bulto
-10. **Siguiente paso:** CU21 (Confirmar Liberado) o CU22 (Venta si ya LIBERADO)
+10. **Siguiente paso:** CU22 (Confirmar Liberado) o CU23 (Venta si ya LIBERADO)
 
 ---
 
 ## Relacion con Otros CUs
 
-### Operaciones Previas (que habilitan CU27)
+### Operaciones Previas (que habilitan CU21)
 
 | CU | Nombre | Resultado que Habilita |
 |----|--------|------------------------|
 | CU5 | Resultado Aprobado | Lote con dictamen APROBADO |
 | CU20 | Ingreso Produccion | Si no se trazo en el ingreso |
 
-### Operaciones Siguientes (despues de CU27)
+### Operaciones Siguientes (despues de CU21)
 
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
-| CU21 | Confirmar Lote Liberado | Lote APROBADO con trazas asignadas |
-| CU22 | Venta Producto | Lote LIBERADO con trazas |
-| CU26 | Reverso | Si se necesita anular el trazado |
+| CU22 | Confirmar Lote Liberado | Lote APROBADO con trazas asignadas |
+| CU23 | Venta Producto | Lote LIBERADO con trazas |
+| CU31 | Reverso | Si se necesita anular el trazado |
 
 ---
 
-**Fin del Documento - CU27_TRAZADO_LOTE v1.1 - Especificacion Funcional**
+**Fin del Documento - CU21_TRAZADO_LOTE v1.1 - Especificacion Funcional**

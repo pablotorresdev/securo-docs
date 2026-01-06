@@ -135,7 +135,7 @@ Algunos tipos de producto **requieren** indicar a que producto final contribuyen
 
 ### 4.3 Restricciones por Tipo
 
-| Tipo | CU1 (Compra) | CU20 (Produccion) | CU7 (Consumo) | CU22 (Venta) |
+| Tipo | CU1 (Compra) | CU20 (Produccion) | CU7 (Consumo) | CU23 (Venta) |
 |------|--------------|-------------------|---------------|--------------|
 | API | SI | NO | SI | NO |
 | EXCIPIENTE | SI | NO | SI | NO |
@@ -336,7 +336,7 @@ La combinacion de estos tres campos debe ser **unica**:
 | Unidad Medida | UNIDAD |
 | Producto Destino | (no aplica) |
 
-**Resultado:** Producto creado. Disponible para CU20 (Ingreso Produccion) y CU22 (Venta).
+**Resultado:** Producto creado. Disponible para CU20 (Ingreso Produccion) y CU23 (Venta).
 
 ### 8.3 Alta de Semielaborado
 
@@ -421,7 +421,7 @@ R: Porque UNIDAD_VENTA es produccion interna (Conifarma), no compra externa.
 | CU1 | API, EXCIPIENTE, ACOND_* | Ingreso por compra |
 | CU20 | SEMIELABORADO, UNIDAD_VENTA | Ingreso por produccion |
 | CU7 | Todos excepto UNIDAD_VENTA | Consumo para produccion |
-| CU22 | Solo UNIDAD_VENTA | Venta de producto |
+| CU23 | Solo UNIDAD_VENTA | Venta de producto |
 
 ### Jerarquia de Productos
 

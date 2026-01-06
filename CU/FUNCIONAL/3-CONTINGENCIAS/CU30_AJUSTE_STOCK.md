@@ -1,7 +1,8 @@
-# CU25 - AJUSTE DE STOCK: Especificacion Funcional
+# CU30 - AJUSTE DE STOCK: Especificacion Funcional
 
-**Version:** 1.0
+**Version:** 1.2
 **Fecha:** 2025-12-06
+**Ultima actualizacion:** 2025-12-28
 **Sistema:** CONITRACK - Gestion de Stock Farmaceutico
 **Tipo Operacion:** BAJA
 **Motivo:** AJUSTE
@@ -40,17 +41,17 @@ El ajuste de stock:
 
 ### 1.3 Cuando Usar Este CU
 
-Usar CU25 cuando:
+Usar CU30 cuando:
 - Hay diferencia entre el stock fisico y el del sistema
 - Se detectan mermas, roturas o perdidas
 - Producto venció y debe descartarse
 - Se necesita regularizar inventario por contingencias
 
-**NO usar CU25 cuando:**
-- Se quiere vender producto → usar **CU22 (Venta Producto)**
+**NO usar CU30 cuando:**
+- Se quiere vender producto → usar **CU23 (Venta Producto)**
 - Se consume en produccion → usar **CU7 (Consumo Produccion)**
 - Se devuelve al proveedor → usar **CU4 (Devolucion Compra)**
-- Se retira del mercado → usar **CU24 (Retiro Mercado)**
+- Se retira del mercado → usar **CU25 (Retiro Mercado)**
 
 ### 1.4 Resultado del CU
 
@@ -270,6 +271,21 @@ Si el lote queda con cantidad = 0 y tenia un analisis en curso (sin dictamen):
 |----------|-------|
 | Dictamen | CANCELADO |
 
+### 6.7 Proteccion de Lotes en RECALL
+
+Si el lote o bulto esta en estado **RECALL** (retiro de mercado), el sistema protege su estado:
+
+| Comportamiento | Descripcion |
+|----------------|-------------|
+| Estado del bulto | NO se modifica (permanece RECALL) |
+| Estado del lote | NO se modifica (permanece RECALL) |
+| Cancelacion de analisis | NO se ejecuta automaticamente |
+| Cantidad | SI se descuenta normalmente |
+| Trazas | SI se marcan como CONSUMIDO (si aplica) |
+| Movimiento | SI se registra normalmente |
+
+**Motivo:** Los lotes en proceso de retiro de mercado deben mantener su estado RECALL hasta que se complete el proceso de recall, independientemente de ajustes de stock que se realicen.
+
 ---
 
 ## 7. Flujo de Pantallas
@@ -282,17 +298,32 @@ Si el lote queda con cantidad = 0 y tenia un analisis en curso (sin dictamen):
       v
 [Formulario Ajuste Stock] ──────────────────┐
       |                                      |
-      | (Completar formulario)               | (Cancelar)
+      | (Vista Previa)                       | (Cancelar)
       |                                      |
       v                                      v
-[Pantalla de Exito]               [Menu Principal]
+[Pantalla de Confirmacion] ────────┐     [Menu Principal]
+      |                            |
+      | (Confirmar y Guardar)      | (Volver a Editar)
+      |                            |
+      v                            v
+[Pantalla de Exito]        [Formulario Ajuste Stock]
       |
       | (Nuevo Ajuste) o (Ir a Inicio)
       v
 [Formulario Ajuste] o [Menu Principal]
 ```
 
-### 7.2 Pantalla de Exito
+### 7.2 Pantalla de Confirmacion
+
+Muestra vista previa de los datos antes de persistir:
+- Datos del lote: Codigo interno, producto, proveedor
+- Datos del ajuste: Fecha, bulto seleccionado
+- Cantidad y unidad (lotes no trazados) o trazas seleccionadas (lotes trazados)
+- Motivo del cambio
+
+Opciones: "Volver a Editar" (mantiene los datos) o "Confirmar y Guardar"
+
+### 7.3 Pantalla de Exito
 
 Muestra:
 - Mensaje de exito: "Ajuste registrado correctamente."
@@ -306,16 +337,16 @@ Opciones: "Registrar otro ajuste" o "Ir al inicio"
 
 ## 8. Operaciones Posteriores
 
-### 8.1 Despues de CU25
+### 8.1 Despues de CU30
 
 | CU | Nombre | Cuando Aplicar |
 |----|--------|----------------|
-| CU26 | Reverso | Si el ajuste fue incorrecto |
+| CU31 | Reverso | Si el ajuste fue incorrecto |
 
 ### 8.2 Flujo Tipico Post-Ajuste
 
 ```
-CU25: Ajuste Stock
+CU30: Ajuste Stock
          |
          | Cantidad descontada
          v
@@ -326,7 +357,7 @@ Lote con   Lote sin
 stock      stock
     |         |
     v         v
-Continua   CU26 (si error)
+Continua   CU31 (si error)
 operando   o fin
 ```
 
@@ -419,7 +450,7 @@ operando   o fin
 ### 10.1 Sobre el Proceso
 
 **P: ¿El ajuste de stock es reversible?**
-R: Si, mediante CU26 (Reverso Movimiento) se puede revertir el ajuste.
+R: Si, mediante CU31 (Reverso Movimiento) se puede revertir el ajuste.
 
 **P: ¿Que pasa si el lote queda sin stock?**
 R: El lote pasa a estado CONSUMIDO. Si tenia un analisis en curso, este se cancela automaticamente.
@@ -451,7 +482,7 @@ R: Pasan a estado CONSUMIDO y quedan vinculadas al movimiento de ajuste.
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si registre un ajuste incorrecto?**
-R: Use CU26 (Reverso) para revertir la operacion.
+R: Use CU31 (Reverso) para revertir la operacion.
 
 **P: ¿Puedo modificar el ajuste despues de confirmado?**
 R: No directamente. Debe reversar y registrar nuevamente.
@@ -467,29 +498,30 @@ R: No directamente. Debe reversar y registrar nuevamente.
 5. **Pre-requisito:** Lote con bulto que tenga stock > 0
 6. **Descuenta stock:** SI, del bulto y lote
 7. **Afecta trazas:** SI, pasan a CONSUMIDO (lotes trazados)
-8. **Cancela analisis:** SI, si el lote queda sin stock
+8. **Cancela analisis:** SI, si el lote queda sin stock (excepto lotes en RECALL)
 9. **Modalidades:** Por trazas (lotes trazados) o por cantidades (no trazados)
 10. **Campo critico:** Motivo del cambio (mínimo 20 caracteres)
+11. **Proteccion RECALL:** Los lotes/bultos en RECALL mantienen su estado
 
 ---
 
 ## Relacion con Otros CUs
 
-### Operaciones que Generan Stock (que CU25 puede ajustar)
+### Operaciones que Generan Stock (que CU30 puede ajustar)
 
 | CU | Nombre | Tipo de Stock |
 |----|--------|---------------|
 | CU1 | Alta Ingreso Compra | Compras |
 | CU20 | Ingreso Produccion | Produccion |
-| CU23 | Devolucion Venta | Devoluciones |
-| CU24 | Retiro Mercado | Recalls |
+| CU24 | Devolucion Venta | Devoluciones |
+| CU25 | Retiro Mercado | Recalls |
 
-### Operaciones Siguientes (despues de CU25)
+### Operaciones Siguientes (despues de CU30)
 
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
-| CU26 | Reverso | Si se necesita revertir el ajuste |
+| CU31 | Reverso | Si se necesita revertir el ajuste |
 
 ---
 
-**Fin del Documento - CU25_AJUSTE_STOCK v1.0 - Especificacion Funcional**
+**Fin del Documento - CU30_AJUSTE_STOCK v1.2 - Especificacion Funcional**

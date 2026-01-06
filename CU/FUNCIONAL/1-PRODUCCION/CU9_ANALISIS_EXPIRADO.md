@@ -144,7 +144,7 @@ Este proceso puede afectar lotes con cualquier dictamen que tenga fecha de reana
 
 | Efecto | Descripcion |
 |--------|-------------|
-| Bloqueo de operaciones | El lote no puede usarse para CU7, CU22, etc. |
+| Bloqueo de operaciones | El lote no puede usarse para CU7, CU23, etc. |
 | Visible en alertas | El lote aparece en reportes de lotes bloqueados |
 | Requiere accion | Usuario debe iniciar nuevo analisis (CU2) |
 
@@ -354,7 +354,7 @@ R: Si. Primero se procesan los de analisis expirado, luego los vencidos. Un lote
 | CU | Nombre | Situacion |
 |----|--------|-----------|
 | CU5 | Resultado Aprobado | Lote aprobado con fecha reanalisis definida |
-| CU21 | Confirmar Liberado | Lote liberado con fecha reanalisis del analisis |
+| CU22 | Confirmar Liberado | Lote liberado con fecha reanalisis del analisis |
 
 ### Operaciones de Recuperacion (despues de CU9)
 
@@ -369,8 +369,8 @@ R: Si. Primero se procesan los de analisis expirado, luego los vencidos. Un lote
 | CU | Nombre | Motivo |
 |----|--------|--------|
 | CU7 | Consumo Produccion | Requiere dictamen APROBADO |
-| CU22 | Venta Producto | Requiere dictamen LIBERADO |
-| CU21 | Confirmar Liberado | Requiere dictamen APROBADO |
+| CU23 | Venta Producto | Requiere dictamen LIBERADO |
+| CU22 | Confirmar Liberado | Requiere dictamen APROBADO |
 
 ---
 

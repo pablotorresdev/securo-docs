@@ -47,13 +47,28 @@ Permite registrar el consumo de materiales aprobados en el proceso de produccion
 |  |  Orden de Produccion                                          |  |
 |  |  Motivo del cambio (min 20 chars)                             |  |
 |  +---------------------------------------------------------------+  |
-|  [Cancelar]                                        [Guardar] ->      |
+|  [Cancelar]                                    [Vista Previa] ->     |
++---------------------------------------------------------------------+
+                              |
+                              | POST /produccion/baja/consumo-produccion/confirm
+                              v
++---------------------------------------------------------------------+
+|  2. CONFIRMACION                                                     |
+|     POST /produccion/baja/consumo-produccion/confirm                |
+|     Template: produccion/baja/consumo-produccion-confirm.html       |
+|  +---------------------------------------------------------------+  |
+|  |  Vista Previa - Consumo por Produccion                        |  |
+|  |  Datos del Lote (codigo, producto, stock)                     |  |
+|  |  Datos del Consumo (fecha, orden, motivo)                     |  |
+|  |  Resumen de cantidades por bulto a consumir                   |  |
+|  +---------------------------------------------------------------+  |
+|  [Volver a Editar]                       [Confirmar y Guardar] ->    |
 +---------------------------------------------------------------------+
                               |
                               | POST /produccion/baja/consumo-produccion
                               v
 +---------------------------------------------------------------------+
-|  2. EXITO                                                            |
+|  3. EXITO                                                            |
 |     GET /produccion/baja/consumo-produccion-ok (redirect)           |
 |     Template: produccion/baja/consumo-produccion-ok.html            |
 |  +---------------------------------------------------------------+  |
@@ -66,7 +81,7 @@ Permite registrar el consumo de materiales aprobados en el proceso de produccion
 +---------------------------------------------------------------------+
 ```
 
-**Nota:** Este CU usa flujo de 2 pasos (formulario -> exito) sin pantalla de confirmacion intermedia.
+**Nota:** Este CU usa flujo de 3 pasos (formulario -> confirmacion -> exito) con pantalla de confirmacion intermedia para prevenir errores.
 
 ---
 
@@ -75,14 +90,15 @@ Permite registrar el consumo de materiales aprobados en el proceso de produccion
 ### Frontend (Templates)
 | Archivo | Descripcion |
 |---------|-------------|
-| `templates/produccion/baja/consumo-produccion.html` | Formulario principal (403 lineas) |
+| `templates/produccion/baja/consumo-produccion.html` | Formulario principal (409 lineas) |
+| `templates/produccion/baja/consumo-produccion-confirm.html` | Pantalla de confirmacion (341 lineas) |
 | `templates/produccion/baja/consumo-produccion-ok.html` | Pantalla de exito (507 lineas) |
 
 ### Backend
 | Archivo | Descripcion |
 |---------|-------------|
-| `controller/cu/BajaConsumoProduccionController.java` | Controlador (103 lineas) |
-| `service/cu/BajaConsumoProduccionService.java` | Servicio de negocio (222 lineas) |
+| `controller/cu/BajaConsumoProduccionController.java` | Controlador (145 lineas) |
+| `service/cu/BajaConsumoProduccionService.java` | Servicio de negocio (233 lineas) |
 | `service/cu/AbstractCuService.java` | Clase base con validaciones comunes |
 
 ### Validadores Especializados
@@ -192,7 +208,7 @@ El metodo `validarConsumoProduccionInput()` ejecuta las siguientes validaciones 
 
 | Regla | Mensaje de Error |
 |-------|------------------|
-| `motivoDelCambio` no nulo y >= 20 caracteres | "El campo motivo del cambio es obligatorio (mínimo 20 caracteres)" |
+| `motivoDelCambio` no nulo y >= 20 caracteres | "El motivo del cambio es obligatorio (mínimo 20 caracteres)" |
 
 **2. validarLoteExiste**
 
@@ -287,7 +303,7 @@ El formulario utiliza la paleta de colores **verde egresos** que identifica las 
 
 ### 8.1 Clase: BajaConsumoProduccionController
 
-El controlador maneja el flujo de 2 pasos (formulario -> exito) y extiende `AbstractCuController` para heredar servicios comunes.
+El controlador maneja el flujo de 3 pasos (formulario -> confirmacion -> exito) y extiende `AbstractCuController` para heredar servicios comunes.
 
 ### 8.2 Flujo de Endpoints
 
@@ -297,9 +313,13 @@ Carga en el modelo:
 - Lotes elegibles para consumo (`loteService.findAllForConsumoProduccionDTOs()`)
 - LoteDTO vacio para binding
 
-**POST /consumo-produccion** - Valida y persiste consumo
+**POST /consumo-produccion/confirm** - Valida y muestra pantalla de confirmacion
 
-Recibe el DTO con grupo de validacion `BajaProduccion`. Ejecuta Bean Validation y luego validaciones de negocio del Service. Si hay errores, retorna al formulario. Si todo es valido, persiste el consumo y redirige a exito.
+Recibe el DTO con grupo de validacion `BajaProduccion`. Ejecuta Bean Validation y luego validaciones de negocio del Service. Si hay errores, retorna al formulario. Si todo es valido, resuelve nombres del lote (producto, cantidades) y muestra la pantalla de confirmacion con todos los datos para revision del usuario.
+
+**POST /consumo-produccion** - Persiste el consumo
+
+Recibe el DTO validado desde la pantalla de confirmacion. Ejecuta nuevamente las validaciones (por seguridad) y persiste el consumo. Redirige a la pantalla de exito con el resultado.
 
 **GET /consumo-produccion-ok** - Muestra resultado exitoso
 
@@ -309,12 +329,21 @@ Recibe el LoteDTO via FlashAttributes y muestra los detalles del lote actualizad
 
 Redirige al home.
 
-### 8.3 Caracteristicas Destacadas
+### 8.3 Metodos Auxiliares
 
-- **Flujo de 2 pasos:** Sin pantalla de confirmacion intermedia.
+**initModelConsumoProduccion(loteDTO, model)** - Inicializa el modelo con lotes disponibles para consumo.
+
+**resolverNombresParaConfirmacion(loteDTO)** - Busca el lote completo y copia los datos del producto (nombre, codigo, cantidades, unidad) al DTO para mostrar en la pantalla de confirmacion.
+
+**procesarConsumoProduccion(loteDTO, redirectAttributes)** - Persiste el consumo y configura mensajes de exito/error.
+
+### 8.4 Caracteristicas Destacadas
+
+- **Flujo de 3 pasos:** Con pantalla de confirmacion intermedia para prevenir errores.
 - **Consumo multi-bulto:** Permite especificar cantidades diferentes por cada bulto.
 - **Conversion de unidades:** Soporta consumir en unidades diferentes a las del bulto.
 - **Flash Attributes:** El resultado se pasa a la pantalla de exito via RedirectAttributes.
+- **Preservacion de datos:** La pantalla de confirmacion permite volver a editar sin perder datos.
 
 ---
 
@@ -459,10 +488,17 @@ Todos los logs usan el prefijo `[CU7]` para facilitar la busqueda.
 
 | Prioridad | Mejora |
 |-----------|--------|
-| MEDIA | Agregar pantalla de confirmacion para consumos grandes (>50% del stock) |
 | BAJA | Mostrar alerta si el lote tiene fecha de reanalisis proxima |
+| BAJA | Agregar validacion visual de cantidades en pantalla de confirmacion |
 
 ---
 
-*Documento generado: 2025-12-13*
-*Version: 1.1*
+*Documento generado: 2025-12-26*
+*Version: 1.2*
+
+### Historial de Cambios
+
+| Version | Fecha | Cambios |
+|---------|-------|---------|
+| 1.2 | 2025-12-26 | Agregada pantalla de confirmacion intermedia (flujo de 3 pasos) |
+| 1.1 | 2025-12-13 | Version inicial documentada |

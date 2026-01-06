@@ -39,8 +39,8 @@ Usar CU20 cuando:
 
 **NO usar CU20 cuando:**
 - El producto proviene de un proveedor externo → usar **CU1 (Alta Ingreso Compra)**
-- Se quiere ajustar stock existente → usar **CU25 (Ajuste Stock)**
-- Se quiere registrar una devolucion de cliente → usar **CU23 (Devolucion Venta)**
+- Se quiere ajustar stock existente → usar **CU30 (Ajuste Stock)**
+- Se quiere registrar una devolucion de cliente → usar **CU24 (Devolucion Venta)**
 
 ### 1.3 Diferencia con CU1 (Ingreso Compra)
 
@@ -374,7 +374,7 @@ CU3: Muestreo (muestra para analisis)
 APROBADO   RECHAZADO
     |         |
     v         v
- CU21      Descarte
+ CU22      Descarte
 (si UV)    o Reproceso
 ```
 
@@ -383,16 +383,16 @@ APROBADO   RECHAZADO
 | CU | Nombre | Cuando Aplicar | Usuario |
 |----|--------|----------------|---------|
 | CU2 | Cuarentena | Para iniciar analisis del lote | Analista Control Calidad |
-| CU26 | Reverso | Si el ingreso fue incorrecto | Usuario que creo el lote |
-| CU25 | Ajuste Stock | Si hay error en cantidades | Supervisor de Planta |
+| CU31 | Reverso | Si el ingreso fue incorrecto | Usuario que creo el lote |
+| CU30 | Ajuste Stock | Si hay error en cantidades | Supervisor de Planta |
 
 ### 8.3 Operaciones NO Posibles Hasta Aprobar
 
 | CU | Nombre | Por Que No |
 |----|--------|------------|
 | CU7 | Consumo Produccion | Requiere lote APROBADO |
-| CU21 | Confirmar Liberacion | Requiere lote APROBADO |
-| CU22 | Venta | Requiere lote LIBERADO |
+| CU22 | Confirmar Liberacion | Requiere lote APROBADO |
+| CU23 | Venta | Requiere lote LIBERADO |
 
 ---
 
@@ -597,10 +597,10 @@ R: Para evitar duplicados y garantizar trazabilidad unica de cada unidad.
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si ingrese mal la cantidad?**
-R: Use CU26 (Reverso) para anular el ingreso y repita con los datos correctos.
+R: Use CU31 (Reverso) para anular el ingreso y repita con los datos correctos.
 
 **P: ¿Que hago si seleccione el producto incorrecto?**
-R: Use CU26 (Reverso) para anular el lote y cree uno nuevo con el producto correcto.
+R: Use CU31 (Reverso) para anular el lote y cree uno nuevo con el producto correcto.
 
 **P: ¿Puedo modificar el lote despues de crearlo?**
 R: No directamente. Debe usar Reverso y crear uno nuevo, o Ajuste de Stock para corregir cantidades.
@@ -635,7 +635,7 @@ R: No directamente. Debe usar Reverso y crear uno nuevo, o Ajuste de Stock para 
 | CU | Nombre | Pre-condicion |
 |----|--------|---------------|
 | CU2 | Cuarentena | Lote recien creado con dictamen RECIBIDO |
-| CU26 | Reverso | Si se necesita anular el ingreso |
+| CU31 | Reverso | Si se necesita anular el ingreso |
 
 ---
 

@@ -139,7 +139,7 @@ Un lote con analisis pendiente (dictamen = null Y fechaRealizado = null) no pued
 |-------|-------------|------|-------------|-------------------|
 | **Lote a Reanalizar** | SI | Selector | Lote que recibira nuevo analisis | - |
 | **Fecha del Reanalisis** | SI | Fecha | Fecha de inicio del reanalisis | Hoy |
-| **Numero de Reanalisis** | SI | Texto | Identificador unico del nuevo analisis | - |
+| **Numero de Reanalisis** | SI | Mascara (Prefijo + Digitos) | Identificador unico: PREFIJO-N-NNNN (ej: MP-1-0001) | Prefijo: MP |
 | **Motivo del Cambio** | SI | Texto | Descripcion del motivo del reanalisis | - |
 
 ### 4.2 Informacion del Lote en el Selector
@@ -274,7 +274,7 @@ Opciones: "Iniciar otro reanalisis" o "Volver al inicio"
 | CU3 | Muestreo | Para tomar muestra del lote para analisis |
 | CU5/CU6 | Resultado Analisis | Para registrar resultado del reanalisis |
 | CU11 | Anulacion Analisis | Si se necesita cancelar el reanalisis |
-| CU26 | Reverso | Si el registro fue incorrecto |
+| CU31 | Reverso | Si el registro fue incorrecto |
 
 ### 8.2 Flujo Tipico de Reanalisis
 
@@ -333,11 +333,11 @@ vida util  ser retirado
 |-------|-------|
 | Lote a Reanalizar | 1-05701_25110001 |
 | Fecha del Reanalisis | 06/12/2025 |
-| Numero de Reanalisis | REA-2025-0150 |
+| Numero de Reanalisis | MP-1-0150 (Prefijo: MP, Digitos: 1-0150) |
 | Motivo del Cambio | Reanalisis programado por proximidad a fecha de reanalisis del proveedor 15/12/2025 |
 
 **Resultado:**
-- Nuevo analisis REA-2025-0150 creado (pendiente)
+- Nuevo analisis MP-1-0150 creado (pendiente)
 - Lote mantiene dictamen APROBADO
 - Movimiento de MODIFICACION/ANALISIS registrado
 - Siguiente paso: CU3 (Muestreo)
@@ -357,7 +357,7 @@ vida util  ser retirado
 **Datos a ingresar:**
 | Campo | Valor |
 |-------|-------|
-| Numero de Reanalisis | EST-2025-0050 |
+| Numero de Reanalisis | SE-1-0050 (Prefijo: SE, Digitos: 1-0050) |
 | Fecha del Reanalisis | 06/12/2025 |
 | Motivo del Cambio | Control de estabilidad semestral segun protocolo PE-EST-2025-001 |
 
@@ -380,7 +380,7 @@ vida util  ser retirado
 **Datos ingresados:**
 | Campo | Valor |
 |-------|-------|
-| Numero de Reanalisis | ANA-2025-0100 (ya existe) |
+| Numero de Reanalisis | MP-1-0100 (ya existe) |
 
 **Resultado:**
 - El sistema rechaza el formulario
@@ -442,12 +442,17 @@ R: Normalmente no aparece porque la consulta filtra por APROBADO. Los lotes LIBE
 R: Si. El sistema valida que no exista otro analisis con el mismo numero en todo el sistema.
 
 **P: ¿Que formato debe tener el numero?**
-R: Texto libre de hasta 20 caracteres. Se recomienda seguir la convencion del laboratorio (ej: REA-2025-0001, EST-2025-0050).
+R: El sistema utiliza una mascara estructurada con el formato **PREFIJO-N-NNNN**:
+- **Prefijo**: Selector con opciones MP, ME, MPD, PTD, SE, PT
+- **Digitos**: 5 digitos en formato N-NNNN (ej: 1-0001)
+- **Ejemplo completo**: MP-1-0001, ME-2-0150, PTD-1-0025
+
+Este formato es consistente con el utilizado en Dictamen Cuarentena (CU10).
 
 ### 10.4 Sobre Errores
 
 **P: ¿Que hago si inicie un reanalisis por error?**
-R: Puede usar CU11 (Anulacion Analisis) para cancelar el analisis, o CU26 (Reverso) para revertir la operacion.
+R: Puede usar CU11 (Anulacion Analisis) para cancelar el analisis, o CU31 (Reverso) para revertir la operacion.
 
 **P: ¿Puedo modificar el numero de analisis despues de crearlo?**
 R: No. Debe anular el analisis y crear uno nuevo con el numero correcto.
@@ -484,8 +489,10 @@ R: No. Debe anular el analisis y crear uno nuevo con el numero correcto.
 | CU3 | Muestreo | Lote con analisis pendiente |
 | CU5/CU6 | Resultado Analisis | Analisis pendiente de resultado |
 | CU11 | Anulacion Analisis | Si se necesita cancelar el reanalisis |
-| CU26 | Reverso | Si se necesita revertir la operacion |
+| CU31 | Reverso | Si se necesita revertir la operacion |
 
 ---
 
-**Fin del Documento - CU8_REANALISIS_LOTE v1.1 - Especificacion Funcional**
+**Fin del Documento - CU8_REANALISIS_LOTE v1.2 - Especificacion Funcional**
+
+*Cambios v1.2 (2025-12-26): Actualizado formato de numero de reanalisis con mascara PREFIJO-N-NNNN consistente con CU10 (Dictamen Cuarentena)*
