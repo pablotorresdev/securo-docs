@@ -196,18 +196,33 @@ docker exec postgres-db psql -U postgres -d conitrack -c "\dt"
 
 | Tabla | Existe (Si/No) | Resultado |
 |-------|----------------|-----------|
-| lote | ______ | [ ] PASS [ ] FAIL |
-| movimiento | ______ | [ ] PASS [ ] FAIL |
+| lotes | ______ | [ ] PASS [ ] FAIL |
+| movimientos | ______ | [ ] PASS [ ] FAIL |
+| detalle_movimientos | ______ | [ ] PASS [ ] FAIL |
 | analisis | ______ | [ ] PASS [ ] FAIL |
-| bulto | ______ | [ ] PASS [ ] FAIL |
-| traza | ______ | [ ] PASS [ ] FAIL |
+| bultos | ______ | [ ] PASS [ ] FAIL |
+| trazas | ______ | [ ] PASS [ ] FAIL |
 | users | ______ | [ ] PASS [ ] FAIL |
 | roles | ______ | [ ] PASS [ ] FAIL |
-| producto | ______ | [ ] PASS [ ] FAIL |
-| proveedor | ______ | [ ] PASS [ ] FAIL |
-| auditoria_cambios | ______ | [ ] PASS [ ] FAIL |
-| auditoria_acceso | ______ | [ ] PASS [ ] FAIL |
+| productos | ______ | [ ] PASS [ ] FAIL |
+| proveedores | ______ | [ ] PASS [ ] FAIL |
+| auditoria_accesos | ______ | [ ] PASS [ ] FAIL |
 | configuracion | ______ | [ ] PASS [ ] FAIL |
+| alertas | ______ | [ ] PASS [ ] FAIL |
+| password_history | ______ | [ ] PASS [ ] FAIL |
+| revinfo (Envers) | ______ | [ ] PASS [ ] FAIL |
+| lotes_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| movimientos_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| bultos_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| analisis_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| trazas_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| productos_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| proveedores_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| users_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| configuracion_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| alertas_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| detalle_movimientos_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
+| roles_aud (Envers) | ______ | [ ] PASS [ ] FAIL |
 
 **Evidencia:** Adjuntar screenshot de listado de tablas (Anexo 11.1, Evidencia IQ-002)
 

@@ -51,6 +51,86 @@ Aplica a:
 
 ---
 
+## 4.1 Roles del Sistema
+
+El sistema define 8 roles organizados por areas funcionales:
+
+| Rol | Area | Nivel | Descripcion |
+|-----|------|-------|-------------|
+| ADMIN | GLOBAL | 6 | Administrador del sistema - Acceso total |
+| DT | GLOBAL | 5 | Director Tecnico - Aprobaciones finales |
+| GERENTE_GARANTIA_CALIDAD | CALIDAD | 4 | Gerente QA - Aprobaciones de calidad |
+| GERENTE_CONTROL_CALIDAD | CALIDAD | 3 | Gerente QC - Gestion de analisis |
+| ANALISTA_CONTROL_CALIDAD | CALIDAD | 2 | Analista QC - Registro de analisis |
+| SUPERVISOR_PLANTA | PLANTA | 3 | Supervisor produccion - Movimientos produccion |
+| ANALISTA_PLANTA | PLANTA | 2 | Analista produccion - Movimientos basicos |
+| AUDITOR | GLOBAL | 1 | Auditor externo - Solo lectura |
+
+**Jerarquia por areas:**
+- Roles GLOBAL (ADMIN, DT, AUDITOR): Tienen autoridad sobre todas las areas
+- Roles CALIDAD: Solo tienen autoridad dentro del area CALIDAD
+- Roles PLANTA: Solo tienen autoridad dentro del area PLANTA
+- CALIDAD y PLANTA no tienen autoridad cruzada entre si
+- AUDITOR nunca puede realizar operaciones de modificacion
+
+---
+
+## 4.2 Matriz CU→Roles (Permisos por Caso de Uso)
+
+### Compras
+| CU | Descripcion | Roles Autorizados |
+|----|-------------|-------------------|
+| CU1 | Ingreso de Lote por Compra | ADMIN, ANALISTA_PLANTA |
+| CU4 | Devolucion de Compra | ADMIN, ANALISTA_PLANTA |
+
+### Calidad
+| CU | Descripcion | Roles Autorizados |
+|----|-------------|-------------------|
+| CU2 | Dictamen: Cuarentena | ADMIN, ANALISTA_CONTROL_CALIDAD |
+| CU3 | Muestreo (Multi-Bulto y Trazable) | ADMIN, ANALISTA_CONTROL_CALIDAD |
+| CU5/CU6 | Resultado Analisis Aprobado/Rechazado | ADMIN, GERENTE_CONTROL_CALIDAD |
+| CU8 | Reanalisis de Producto | ADMIN, GERENTE_CONTROL_CALIDAD |
+| CU11 | Anulacion de Analisis | ADMIN, GERENTE_CONTROL_CALIDAD |
+
+### Produccion
+| CU | Descripcion | Roles Autorizados |
+|----|-------------|-------------------|
+| CU7 | Consumo de Produccion | ADMIN, SUPERVISOR_PLANTA |
+| CU20 | Ingreso por Produccion Interna | ADMIN, SUPERVISOR_PLANTA |
+
+### Ventas
+| CU | Descripcion | Roles Autorizados |
+|----|-------------|-------------------|
+| CU21 | Trazado Unidad de Venta | ADMIN, GERENTE_GARANTIA_CALIDAD, DT |
+| CU22 | Confirmar Lote Liberado | ADMIN, GERENTE_GARANTIA_CALIDAD, DT |
+| CU23 | Venta de Producto | ADMIN, ANALISTA_PLANTA |
+| CU24 | Devolucion de Cliente | ADMIN, GERENTE_GARANTIA_CALIDAD |
+| CU25 | Retiro de Mercado (Recall) | ADMIN, GERENTE_GARANTIA_CALIDAD |
+
+### Contingencias
+| CU | Descripcion | Roles Autorizados |
+|----|-------------|-------------------|
+| CU30 | Ajuste de Inventario | ADMIN, SUPERVISOR_PLANTA, ANALISTA_PLANTA |
+| CU31 | Reverso de Movimiento | Todos excepto AUDITOR (reglas adicionales de jerarquia) |
+
+### ABM Maestros
+| CU | Descripcion | Roles Autorizados |
+|----|-------------|-------------------|
+| CU40 | ABM Proveedores | ADMIN, ANALISTA_PLANTA |
+| CU41 | ABM Productos | ADMIN, GERENTE_CONTROL_CALIDAD |
+| CU42 | Configuracion del Sistema | ADMIN |
+| CU43 | ABM Usuarios | ADMIN |
+
+### Consultas
+| Funcion | Roles Autorizados |
+|---------|-------------------|
+| Consultas generales (Lotes, Movimientos, etc.) | Todos los roles |
+| Consultas de Auditoria (incluye inactivos) | ADMIN, DT, AUDITOR |
+
+**Nota:** El rol AUDITOR tiene acceso de solo lectura a todas las consultas y consultas de auditoria, pero NO puede realizar ninguna operacion de modificacion.
+
+---
+
 ## 5. Proceso de alta de usuarios
 
 1. El jefe directo del usuario (o Process Owner) completa una Solicitud de Alta de Usuario, incluyendo:

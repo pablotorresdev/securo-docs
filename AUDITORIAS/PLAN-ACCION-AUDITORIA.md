@@ -1,6 +1,10 @@
 # Plan de Accion para Auditoria ANMAT
 ## Evaluacion del Sistema Conitrack contra Estandares de Auditoria
 
+> **NOTA:** Este documento ha sido SUPERSEDIDO por `PLAN-ACCION-BLINDADO.md` que proporciona
+> un plan de accion mas completo con 39 entregables especificos y respuestas blindadas.
+> Mantener este documento solo como referencia de analisis de gaps inicial.
+
 **Fecha de evaluacion:** 2025-12-09
 **Sistema:** Conitrack v1.0
 **Evaluador:** Analisis automatizado basado en documentos de AUDITORIAS/
@@ -66,7 +70,7 @@ El sistema tiene una implementacion tecnica robusta pero carece de la documentac
 |----------|------------------|--------|
 | Reconstruir movimientos de lote de 18 meses? | SI - Audit trail implementado | BAJO |
 | Documento QA aprobando validacion proporcional? | NO EXISTE | ALTO |
-| Campos editables via SQL sin rastro? | NO - Audit trail en aplicacion | MEDIO (falta trigger DB) |
+| Campos editables via SQL sin rastro? | NO - Hibernate Envers a nivel aplicacion | BAJO (BD solo accesible por IT autorizado) |
 | Usuarios compartidos? | NO - Politica de usuarios unicos | BAJO |
 | Version en produccion = version validada? | NO DOCUMENTADO | ALTO |
 

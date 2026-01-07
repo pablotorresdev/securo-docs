@@ -636,8 +636,8 @@ docker exec postgres-db psql -U postgres -d conitrack -c "\dt"
    - roles
    - producto
    - proveedor
-   - auditoria_cambios
-   - auditoria_acceso
+   - auditoria_accesos (accesos de AUDITOR)
+   - revinfo + tablas *_AUD (Hibernate Envers - audit trail de cambios)
    - configuracion
 
 4. Capturar screenshot

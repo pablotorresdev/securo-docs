@@ -4,10 +4,10 @@
 ---
 
 **Codigo documento:** SOP-001
-**Version:** 1.1
-**Fecha:** 2026-01-06
+**Version:** 1.0
+**Fecha:** 2025-12-16
 **Estado:** Aprobado
-**Fecha proxima revision:** 2027-01-06
+**Fecha proxima revision:** 2026-12-16
 
 ---
 
@@ -16,7 +16,6 @@
 | Version | Fecha | Autor | Descripcion |
 |---------|-------|-------|-------------|
 | 1.0 | 2025-12-16 | Equipo IT | Version inicial aprobada |
-| 1.1 | 2026-01-06 | Equipo IT | Actualizar tablas Envers, sincronizar con GitHub Actions + R2 |
 
 ---
 
@@ -170,7 +169,7 @@ DB_USER="postgres"
 DATE=$(date +%Y%m%d_%H%M%S)
 BACKUP_FILE="$BACKUP_DIR/conitrack_$DATE.sql"
 LOG_FILE="$BACKUP_DIR/backup.log"
-RETENTION_DAYS=30
+RETENTION_DAYS=180
 MIN_TABLES=10
 
 # ============================================
@@ -234,8 +233,8 @@ chmod +x /opt/securo/backup-conitrack.sh
 # Editar crontab del usuario root o con permisos
 sudo crontab -e
 
-# Agregar linea para backup semanal (Domingos 02:00)
-0 2 * * 0 /opt/securo/backup-conitrack.sh
+# Agregar linea para backup semanal (Domingos 03:00 UTC)
+0 3 * * 0 /opt/securo/backup-conitrack.sh
 
 # Alternativa: backup diario
 # 0 2 * * * /opt/securo/backup-conitrack.sh
@@ -293,7 +292,7 @@ Add-Content $LogFile ""
 
 **Crear tarea programada:**
 ```cmd
-schtasks /create /tn "Backup Conitrack" /tr "powershell.exe -ExecutionPolicy Bypass -File C:\opt\securo\backup-conitrack.ps1" /sc weekly /d SUN /st 02:00 /ru SYSTEM
+schtasks /create /tn "Backup Conitrack" /tr "powershell.exe -ExecutionPolicy Bypass -File C:\opt\securo\backup-conitrack.ps1" /sc weekly /d SUN /st 03:00 /ru SYSTEM
 ```
 
 ### 6.4 Verificacion de Ejecucion Semanal

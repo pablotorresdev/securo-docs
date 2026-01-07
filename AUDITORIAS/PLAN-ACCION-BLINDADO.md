@@ -100,7 +100,7 @@
 | Pregunta | Respuesta Blindada | Documento Soporte |
 |----------|-------------------|-------------------|
 | "¿Garantiza que ningun dato se usa para decision GxP?" | "El alcance del sistema esta definido en CTK-ALC-001 donde se explicita que Conitrack NO se utiliza para liberacion de lotes. Cualquier uso fuera de este alcance requiere re-evaluacion segun SOP-CTK-CHG-001" | CTK-ALC-001 |
-| "¿Puede reconstruir movimientos de 18 meses?" | "Si. El audit trail esta implementado en tabla auditoria_cambios con retencion de 365+ dias. Ver evidencia en CTK-OQ-001 caso TC-031" | CTK-OQ-001, logs |
+| "¿Puede reconstruir movimientos de 18 meses?" | "Si. El audit trail esta implementado con Hibernate Envers (tablas *_AUD + revinfo) con retencion indefinida. Ver evidencia en CTK-OQ-001 caso TC-031" | CTK-OQ-001, logs |
 | "¿QA aprobo la validacion proporcional?" | "Si. Ver firma de QA en CTK-VP-001 Plan de Validacion y CTK-VAL-001 Reporte de Validacion" | CTK-VP-001, CTK-VAL-001 |
 | "¿Hay campos editables via SQL sin rastro?" | "El sistema implementa audit trail a nivel aplicacion. El acceso directo a BD esta restringido segun CTK-SEC-001. Solo IT con autorizacion documentada puede acceder" | CTK-SEC-001 |
 | "¿Existen usuarios compartidos?" | "No. La politica CTK-SEC-001 prohibe usuarios compartidos. Ver REG-USR-001 con lista de usuarios unicos" | CTK-SEC-001, REG-USR-001 |
@@ -130,7 +130,7 @@
 |----------|-------------------|-------------------|
 | "¿Inventario de sistemas?" | "Si. CTK-INV-001 donde Conitrack figura como sistema de soporte GxP indirecto" | CTK-INV-001 |
 | "¿Designacion System/Process Owner?" | "CTK-ROL-001 y CTK-ROL-002 firmados por Direccion General" | CTK-ROL-001, CTK-ROL-002 |
-| "¿Evaluacion proveedor hosting?" | "CTK-PROV-001 incluye evaluacion de infraestructura (Heroku/servidor)" | CTK-PROV-001 |
+| "¿Evaluacion proveedor hosting?" | "CTK-PROV-001 incluye evaluacion de infraestructura (Railway/CloudFlare R2)" | CTK-PROV-001 |
 | "¿SOP backup con verificacion restore?" | "SOP-CTK-BAK-001 seccion 7 define procedimiento. REG-RST-001 evidencia ejecucion" | SOP-CTK-BAK-001, REG-RST-001 |
 | "¿Revision regular audit trail?" | "SOP-CTK-AUD-001 define revision trimestral. REG-AUD-001 muestra revisiones ejecutadas" | SOP-CTK-AUD-001, REG-AUD-001 |
 | "¿Registro cambios con impacto GxP?" | "REG-CHG-001 incluye columna 'Evaluacion Impacto GxP' para cada cambio" | REG-CHG-001 |
@@ -146,7 +146,7 @@
 | "Seguridad robusta?" | "Por que no igual rigor en validacion?" | "La validacion es proporcional al riesgo (GAMP 5, criticidad baja). Ver CTK-GAMP-001 y CTK-VP-001 aprobados por QA" | CTK-GAMP-001, CTK-VP-001 |
 | "Usuarios probaron y funciona?" | "Donde estan resultados en OQ/PQ?" | "CTK-OQ-001 contiene 25+ casos ejecutados con evidencia. Pruebas de usuario documentadas como aceptacion" | CTK-OQ-001 |
 | "Script de backup?" | "Backup no probado garantiza integridad?" | "REG-RST-001 documenta prueba de restore exitosa con fecha, procedimiento y resultado" | REG-RST-001 |
-| "Audit trail registra accesos?" | "Como reconstruyo valor anterior y motivo?" | "Tabla auditoria_cambios guarda: valor_anterior, valor_nuevo, motivoCambio (min 20 chars). Ver CTK-OQ-001 caso TC-031" | CTK-OQ-001, DB schema |
+| "Audit trail registra accesos?" | "Como reconstruyo valor anterior y motivo?" | "Hibernate Envers (tablas *_AUD + revinfo) guarda: revision_type, timestamp, usuario, motivo. Los movimientos tienen motivoCambio (min 20 chars). Ver CTK-OQ-001 caso TC-031" | CTK-OQ-001, DB schema |
 | "Git para cambios?" | "Donde esta procedimiento formal?" | "SOP-CTK-CHG-001 define proceso. Git es herramienta tecnica. REG-CHG-001 tiene registros formales" | SOP-CTK-CHG-001, REG-CHG-001 |
 | "Sin incidentes criticos?" | "Sin registro de menores, como sabe?" | "REG-INC-001 registra TODOS los incidentes (criticos y menores). Si no hay registros, es porque no hubo incidentes" | REG-INC-001 |
 | "Revision anual planeada?" | "Por que no existe evaluacion aun?" | "CTK-REV-001 es la primera evaluacion periodica documentada y firmada" | CTK-REV-001 |

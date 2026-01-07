@@ -241,7 +241,7 @@ El sistema define 8 roles organizados por areas funcionales:
 | **Nombre** | Trazabilidad Genealogica de Lotes |
 | **Descripcion** | El sistema debe permitir rastrear el origen de un lote hasta su raiz |
 | **Prioridad** | Media |
-| **Criterios de aceptacion** | 1. Cada lote puede tener un lote de origen (loteOrigen)<br>2. Sistema permite navegar la cadena de origen<br>3. Profundidad maxima de 3 niveles para evitar referencias circulares<br>4. Metodo getRootLote() retorna el lote raiz de la cadena |
+| **Criterios de aceptacion** | 1. Cada lote puede tener un lote de origen (loteOrigen)<br>2. Sistema permite navegar la cadena de origen<br>3. Profundidad maxima de 5 niveles para evitar referencias circulares<br>4. Metodo getRootLote() retorna el lote raiz de la cadena |
 | **Roles autorizados** | Todos los roles |
 
 #### RF-006: Gestion de Bultos
@@ -719,7 +719,7 @@ El sistema define 8 roles organizados por areas funcionales:
 | **ID** | RNF-016 |
 | **Nombre** | Backup Automatico de Base de Datos |
 | **Descripcion** | Sistema debe tener backup automatico configurado |
-| **Especificacion** | Backup semanal minimo, retencion 30 dias, RPO 7 dias |
+| **Especificacion** | Backup semanal minimo, retencion 26 backups (~180 dias), RPO 7 dias |
 | **Verificacion** | Ver SOP-001, Test TC-051 en IQ/OQ |
 | **Referencia ANMAT** | Anexo 6, Requisito 7.2 |
 
@@ -798,7 +798,7 @@ El sistema define 8 roles organizados por areas funcionales:
 | **ID** | RNF-027 |
 | **Nombre** | Retencion de Logs de Auditoria |
 | **Descripcion** | Logs de auditoria deben conservarse por tiempo definido |
-| **Especificacion** | 365 dias de retencion, rotacion diaria, compresion automatica |
+| **Especificacion** | Retencion **indefinida** (ANMAT Anexo 6 Req. 9), tablas *_AUD append-only, sin purga automatica |
 | **Verificacion** | Verificacion de configuracion logback |
 | **Referencia ANMAT** | Anexo 6, Requisito 7.1 |
 

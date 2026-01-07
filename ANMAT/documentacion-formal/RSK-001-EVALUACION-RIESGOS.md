@@ -239,13 +239,13 @@ Leyenda: Verde(1-2), Amarillo(3-4), Rojo(6-9)
 | R-ID-001 | Backup automatico semanal | Preventivo | SOP-001, logs backup |
 | R-ID-001 | Prueba de restore trimestral | Detectivo | Registros restore |
 | R-ID-002 | Control de acceso por roles | Preventivo | 8 roles definidos |
-| R-ID-002 | Audit trail de cambios | Detectivo | Tabla auditoria_cambios |
+| R-ID-002 | Audit trail de cambios (Hibernate Envers) | Detectivo | Tablas *_AUD (append-only, inmutables) |
 | R-ID-003 | Soft delete (eliminacion logica) | Preventivo | @SQLDelete en entidades |
 | R-ID-003 | Sin opcion de DELETE fisico | Preventivo | No hay UI de eliminacion |
 | R-ID-004 | Validacion frontend y backend | Preventivo | Validators en DTOs |
 | R-ID-004 | Constraints en base de datos | Preventivo | Schema PostgreSQL |
 | R-ID-005 | Motivo obligatorio (min 20 chars) | Preventivo | Validacion en servicios |
-| R-ID-005 | Registro automatico en todas las operaciones | Preventivo | AuditoriaCambios entity |
+| R-ID-005 | Registro automatico en todas las operaciones | Preventivo | Hibernate Envers (tablas *_AUD, revinfo) |
 
 ### 7.2 Controles de Disponibilidad
 
@@ -254,7 +254,7 @@ Leyenda: Verde(1-2), Amarillo(3-4), Rojo(6-9)
 | R-DI-001 | Infraestructura Docker | Preventivo | docker-compose.yml |
 | R-DI-001 | Monitoreo de salud (/actuator/health) | Detectivo | Spring Actuator |
 | R-DI-002 | Backup automatico semanal | Preventivo | SOP-001 |
-| R-DI-002 | Retencion 30 dias | Preventivo | Script backup |
+| R-DI-002 | Retencion 180 dias (~26 backups semanales) | Preventivo | Script backup, SOP-001 |
 | R-DI-003 | Procedimiento documentado | Preventivo | SOP-001 |
 | R-DI-003 | RTO definido (4 horas) | Preventivo | SOP-001 |
 
