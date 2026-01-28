@@ -133,7 +133,7 @@ securo-docs/
 
 | Documento | Descripcion | Contenido Ejecutable |
 |-----------|-------------|----------------------|
-| `BACKUP-RESTORE-GUIDE.md` | Guia tecnica de backup/restore. | :clipboard: **Procedimiento paso a paso** Windows :clipboard: **Procedimiento paso a paso** Docker :white_check_mark: Comandos de verificacion :clipboard: Solucion de problemas |
+| `PLAN-TESTING-CLIENTE.md` | **Plan de testing COMPLETO para validacion del cliente.** | :test_tube: **37 tests** cubriendo **22 CUs** :white_check_mark: 17 tests criticos identificados :memo: Instrucciones paso a paso para QA Jr :warning: Matriz completa de roles (DT, GGC, GCC, ACC, SP, AP) :clipboard: Criterios de aceptacion (100% criticos + 85% total) :memo: Backup/Restore incluido |
 
 ---
 
