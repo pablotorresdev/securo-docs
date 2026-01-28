@@ -73,7 +73,7 @@ El sistema Conitrack **CUMPLE** con todos los requisitos de ANMAT Anexo 6 para s
 - Resumen de resultados
 
 #### SOP-001 - Procedimiento de Backup
-- Politica de backup (semanal, 26 backups ~180 dias retencion)
+- Politica de backup (semanal, 30 dias retencion)
 - Scripts para Linux y Windows
 - Configuracion cron/Programador de Tareas
 - Procedimiento de verificacion
