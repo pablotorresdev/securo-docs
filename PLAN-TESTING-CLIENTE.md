@@ -161,13 +161,21 @@ Este plan de testing cubre **TODOS** los casos de uso del sistema Conitrack para
 
 **Rol:** Usuario con acceso a cambio de password
 
+**Requisitos de contraseña:**
+- Minimo 8 caracteres
+- Al menos 1 mayuscula
+- Al menos 1 minuscula
+- Al menos 1 numero
+- Al menos 1 caracter especial (!@#$%^&*()_+-=[]{}|;:,.<>?)
+
 | Password de Prueba | Resultado Esperado | OK |
 |-------------------|-------------------|-----|
 | "abc" | Rechazada - muy corta | [ ] |
-| "abcdefgh" | Rechazada - sin mayuscula/numero | [ ] |
-| "ABCDEFGH" | Rechazada - sin minuscula/numero | [ ] |
-| "Abcdefgh" | Rechazada - sin numero | [ ] |
-| "Abcdefg1" | **Aceptada** | [ ] |
+| "abcdefgh" | Rechazada - sin mayuscula/numero/especial | [ ] |
+| "ABCDEFGH" | Rechazada - sin minuscula/numero/especial | [ ] |
+| "Abcdefgh" | Rechazada - sin numero/especial | [ ] |
+| "Abcdefg1" | Rechazada - sin caracter especial | [ ] |
+| "Abcdefg1!" | **Aceptada** | [ ] |
 
 **Resultado:** [ ] PASO [ ] FALLO
 
@@ -563,50 +571,60 @@ Motivo: "Ingreso de produccion segun orden OP-TEST-001"
 
 # SECCION G: VENTAS (CU21-CU25)
 
+**IMPORTANTE - Orden de Operaciones:**
+El flujo correcto para lotes de Unidad de Venta (UV) es:
+1. **Aprobar** el lote (CU5)
+2. **Trazar** el lote - asignar numeros de traza (CU21)
+3. **Liberar** el lote para venta (CU22)
+4. **Vender** el producto (CU23)
+
+> **Nota:** Una vez que un lote es LIBERADO sin trazas asignadas, ya NO puede ser trazado posteriormente.
+> Por ello, el trazado debe realizarse ANTES de la liberacion.
+
 ---
 
-## TEST G-01: Liberacion de Lote (CU22) :red_circle:
+## TEST G-01: Trazado de Lote (CU21) :orange_circle:
+
+**Ejecutor:** [DT] o [GGC]
+
+**Prerrequisito:** Lote UV APROBADO (llevar lote 25010001 por cuarentena → aprobacion CU2 y CU5)
+
+| Paso | Accion | Resultado Esperado | OK |
+|------|--------|-------------------|-----|
+| 1 | Llevar lote UV por CU2 y CU5 | Dictamen: APROBADO | [ ] |
+| 2 | Menu > Ventas > Trazado | Lista lotes aprobados | [ ] |
+| 3 | Seleccionar lote 25010001 | Formulario visible | [ ] |
+| 4 | Cantidad a trazar: 20 | Campo acepta | [ ] |
+| 5 | Motivo: "Asignacion trazas para comercializacion" | Texto aceptado | [ ] |
+| 6 | Click Guardar | Mensaje exito + rango trazas | [ ] |
+| 7 | Verificar lote | Trazas asignadas | [ ] |
+
+**Rango trazas:** _______________ a _______________
+
+**Resultado:** [ ] PASO [ ] FALLO
+
+---
+
+## TEST G-02: Liberacion de Lote (CU22) :red_circle:
 
 **Ejecutor:** [DT] Director Tecnico o [GGC]
 
 **IMPORTANTE:** Este test DEBE ser ejecutado o validado por el Director Tecnico.
 
-**Prerrequisito:** Lote UV aprobado (llevar lote 25010001 por cuarentena → aprobacion)
+**Prerrequisito:** Lote UV APROBADO con trazas asignadas (G-01 completado)
 
 | Paso | Accion | Resultado Esperado | OK |
 |------|--------|-------------------|-----|
-| 1 | Llevar lote UV por CU2 y CU5 | Dictamen: APROBADO | [ ] |
-| 2 | Menu > Ventas > Liberar Lote | Lista lotes UV aprobados | [ ] |
-| 3 | Seleccionar lote 25010001 | Formulario visible | [ ] |
-| 4 | Verificar datos | Informacion correcta | [ ] |
-| 5 | Motivo: "Liberacion de lote segun revision de expediente completo" | Texto aceptado | [ ] |
-| 6 | Click Liberar | Mensaje exito | [ ] |
-| 7 | Verificar lote | Dictamen: LIBERADO | [ ] |
+| 1 | Menu > Ventas > Liberar Lote | Lista lotes UV aprobados con trazas | [ ] |
+| 2 | Seleccionar lote 25010001 | Formulario visible | [ ] |
+| 3 | Verificar datos | Informacion correcta, trazas visibles | [ ] |
+| 4 | Motivo: "Liberacion de lote segun revision de expediente completo" | Texto aceptado | [ ] |
+| 5 | Click Liberar | Mensaje exito | [ ] |
+| 6 | Verificar lote | Dictamen: LIBERADO | [ ] |
 
 **Resultado:** [ ] PASO [ ] FALLO
 
 **Firma Director Tecnico:** _________________________
-
----
-
-## TEST G-02: Trazado de Lote (CU21) :orange_circle:
-
-**Ejecutor:** [DT] o [GGC]
-
-**Prerrequisito:** Lote UV LIBERADO
-
-| Paso | Accion | Resultado Esperado | OK |
-|------|--------|-------------------|-----|
-| 1 | Menu > Ventas > Trazado | Lista lotes liberados | [ ] |
-| 2 | Seleccionar lote 25010001 | Formulario visible | [ ] |
-| 3 | Cantidad a trazar: 20 | Campo acepta | [ ] |
-| 4 | Motivo: "Asignacion trazas para comercializacion" | Texto aceptado | [ ] |
-| 5 | Click Guardar | Mensaje exito + rango trazas | [ ] |
-| 6 | Verificar lote | Trazas asignadas | [ ] |
-
-**Rango trazas:** _______________ a _______________
-
-**Resultado:** [ ] PASO [ ] FALLO
 
 ---
 
@@ -676,11 +694,13 @@ Motivo: "Ingreso de produccion segun orden OP-TEST-001"
 
 | Test | CU | Ejecutor | Criticidad | Resultado |
 |------|----|---------|-----------| ----------|
-| G-01 | CU22 | **[DT]** | :red_circle: | [ ] PASO [ ] FALLO |
-| G-02 | CU21 | [DT]/[GGC] | :orange_circle: | [ ] PASO [ ] FALLO |
+| G-01 | CU21 | [DT]/[GGC] | :orange_circle: | [ ] PASO [ ] FALLO |
+| G-02 | CU22 | **[DT]** | :red_circle: | [ ] PASO [ ] FALLO |
 | G-03 | CU23 | [AP] | :red_circle: | [ ] PASO [ ] FALLO |
 | G-04 | CU24 | [GGC] | :orange_circle: | [ ] PASO [ ] FALLO |
 | G-05 | CU25 | [GGC] | :red_circle: | [ ] PASO [ ] FALLO |
+
+> **Orden requerido:** G-01 (Trazado) → G-02 (Liberacion) → G-03 (Venta)
 
 **Firma [DT]:** _________________________ **Fecha:** ____/____/____
 
@@ -982,7 +1002,7 @@ Motivo: "Ingreso de produccion segun orden OP-TEST-001"
 | E-01 | Resultado aprobado (CU5) | [ ] PASO [ ] FALLO |
 | F-01 | Ingreso produccion (CU20) | [ ] PASO [ ] FALLO |
 | F-02 | Consumo produccion (CU7) | [ ] PASO [ ] FALLO |
-| G-01 | Liberacion lote (CU22) **[DT]** | [ ] PASO [ ] FALLO |
+| G-02 | Liberacion lote (CU22) **[DT]** | [ ] PASO [ ] FALLO |
 | G-03 | Venta producto (CU23) | [ ] PASO [ ] FALLO |
 | G-05 | Recall (CU25) | [ ] PASO [ ] FALLO |
 | H-02 | Reverso movimiento (CU31) | [ ] PASO [ ] FALLO |
